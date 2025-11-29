@@ -19,7 +19,12 @@ export default async function Home() {
 
   // Busca os produtos na API (servidor)
   try {
-    const response = await fetch("https://fakestoreapi.com/products");
+    const response = await fetch("https://fakestoreapi.com/products", {
+      headers: {
+        "User-Agent": "Mozilla/5.0",
+      },
+      cache: "no-store", // ← Força fetch novo toda vez
+    });
     if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
     products = await response.json();
   } catch (err) {
