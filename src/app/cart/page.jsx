@@ -16,7 +16,9 @@ export default function Cart() {
 
   if (!isClient) {
     return (
-      <div className="bg-zinc-950 text-white text-center mt-20">Loading...</div>
+      <main className="bg-zinc-950 text-white text-center mt-20">
+        Loading...
+      </main>
     );
   }
 
