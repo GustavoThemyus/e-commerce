@@ -1,7 +1,7 @@
 // Total, botão finalizar, botão continuar
 import { useState } from "react";
 import Link from "next/link";
-import { Check } from "lucide-react";
+import { CheckCircle } from "lucide-react";
 
 export function CartSummary({ products }) {
   const [isProcessing, setIsProcessing] = useState(false);
@@ -104,20 +104,16 @@ export function CartSummary({ products }) {
           Continue shopping
         </Link>
 
-        {showSuccess && (
-          <div
-            className={`flex items-center justify-center gap-2 mt-6 text-emerald-400 text-sm transition-all duration-300 transform
-          ${
+        <div
+          className={`flex items-center justify-center gap-2 text-emerald-400 text-sm transition-all duration-300 transform ${
             showSuccess
-              ? "opacity-100 translate-y-0"
-              : "opacity-0 translate-y-3"
-          }
-            `}
-          >
-            <Check className="w-4 h-4" />
-            <span>Purchase completed</span>
-          </div>
-        )}
+              ? "opacity-100 translate-y-0 h-auto mt-6"
+              : "opacity-0 -translate-y-2 h-0 overflow-hidden"
+          }`}
+        >
+          <CheckCircle className="w-4 h-4" />
+          <span>Purchase successful!</span>
+        </div>
       </div>
     </div>
   );

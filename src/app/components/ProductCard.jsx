@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useState } from "react";
-import { CheckCircle } from "lucide-react";
+import { CircleCheck } from "lucide-react";
 
 export default function ProductCard({ product, addToCart }) {
   const [added, setAdded] = useState(false);
@@ -27,7 +27,7 @@ export default function ProductCard({ product, addToCart }) {
             added ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
           }`}
         >
-          <CheckCircle className="w-4 h-4" />
+          <CircleCheck className="w-4 h-4" />
           Added to cart
         </p>
       </div>
