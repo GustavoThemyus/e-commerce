@@ -1,25 +1,23 @@
 "use client";
 import Image from "next/image";
 import { useState } from "react";
-import { CircleCheck } from "lucide-react";
+import { CircleCheck, Star } from "lucide-react";
 
 export default function ProductCard({ product, addToCart }) {
   const [added, setAdded] = useState(false);
   return (
-    <div className="bg-gray-300 rounded-xl flex flex-col justify-between h-96 p-4">
-      <div className="flex justify-center items-center h-48 overflow-hidden">
+    <div className="bg-gray-300 rounded-xl flex flex-col justify-between h-92 p-4">
+      <div className="flex justify-center items-center h-40 overflow-hidden">
         <Image
           width={400}
           height={400}
           src={product.image}
           alt={product.title}
-          className="w-40 max-h-32 object-contain"
+          className="w-40 max-h-24 object-contain"
         />
       </div>
 
-      <h3 className="text-black text-lg line-clamp-2 mt-10 mb-4">
-        {product.title}
-      </h3>
+      <h3 className="text-black text-lg mt-10">{product.title}</h3>
 
       <div>
         <p
@@ -32,6 +30,12 @@ export default function ProductCard({ product, addToCart }) {
         </p>
       </div>
 
+      <div>
+        <p className="text-md flex">
+          Rating: {product.rating.rate}
+          <Star className="ml-1 h-4 w-4 text-orange-500 mt-0.5" />
+        </p>
+      </div>
       <div className="justify-between flex items-end">
         <p className="text-lg text-black pb-0 justify-between">
           $ {product.price.toFixed(2)}
