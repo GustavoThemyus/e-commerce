@@ -105,7 +105,7 @@ export function CartSummary({ products }) {
         </Link>
 
         <div
-          className={`flex items-center justify-center gap-2 text-emerald-500 text-sm transition-all duration-300 transform ${
+          className={`flex items-center justify-center gap-2 text-emerald-600 text-sm transition-all duration-300 transform ${
             showSuccess
               ? "opacity-100 translate-y-0 h-auto mt-6"
               : "opacity-0 -translate-y-2 h-0 overflow-hidden"
