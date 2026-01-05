@@ -1,7 +1,7 @@
 import CartPageClient from "./CartPageClient";
 
 export const metadata = {
-  title: "E-Commerce | Cart",
+  title: "Cart | E-Commerce",
   description: "Shopping cart with your selected products",
   openGraph: {
     title: "E-Commerce - Cart",

@@ -1,17 +1,12 @@
 "use client";
 import Link from "next/link";
-import { Github, Instagram, Linkedin } from "lucide-react";
+import { Github, Linkedin } from "lucide-react";
 import { SiWhatsapp } from "react-icons/si";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { CartContext } from "@/context/CartContext";
 
 export default function Header() {
-  const { cart } = useContext(CartContext);
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+  const { cart, isHydrated } = useContext(CartContext);
 
   return (
     <header className="flex px-2 pt-4 pb-4 bg-gray-50 text-black border-b">
@@ -38,7 +33,7 @@ export default function Header() {
               </li>
               <li className="hover:underline">
                 <Link href="/cart">
-                  CART {isClient && cart.length > 0 && `(${cart.length})`}
+                  CART {isHydrated && cart.length > 0 && `(${cart.length})`}
                 </Link>
               </li>
               <li className="hover:underline">

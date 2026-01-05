@@ -28,7 +28,7 @@ export default function Cart() {
 
   return (
     <main className="p-8 bg-gray-50 min-h-screen">
-      <h1 className="text-3xl text-black text-center mb-8">
+      <h1 className="text-2xl text-black text-center mb-8">
         MY CART ({cart.length})
       </h1>
 

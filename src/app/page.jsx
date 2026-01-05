@@ -3,7 +3,7 @@ import ProductList from "./components/ProductList";
 
 export const metadata = {
   // Informações adicionais que descrevem o conteúdo de uma página
-  title: "E-Commerce | Home",
+  title: "Home | E-Commerce",
   description: "Home Page",
   openGraph: {
     // Responsável pela pré visualização ao compartilhar o link do projeto
@@ -26,7 +26,7 @@ export default async function Home() {
         Accept: "application/json",
         "Accept-Language": "en-US,en;q=0.9",
       },
-      cache: "no-store", // ← Força fetch novo toda vez
+      cache: "no-store", // Força fetch novo toda vez
     });
     if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
     products = await response.json();
@@ -41,7 +41,7 @@ export default async function Home() {
   return (
     <main className="p-8 bg-gray-50">
       <div className="mt-8 mb-10">
-        <h1 className="text-3xl text-black text-center">STORE</h1>
+        <h1 className="text-2xl text-black text-center">STORE</h1>
       </div>
 
       {/* Se houver erro, mostra mensagem */}

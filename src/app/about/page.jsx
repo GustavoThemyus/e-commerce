@@ -1,6 +1,6 @@
 export const metadata = {
   // Informações adicionais que descrevem o conteúdo de uma página
-  title: "E-Commerce | About",
+  title: "About | E-Commerce",
   description: "About Us",
   openGraph: {
     // Responsável pela pré visualização ao compartilhar o link do projeto

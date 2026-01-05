@@ -13,16 +13,19 @@ export const metadata = {
 
 export default function NotFound() {
   return (
-    <div className="bg-gray-50 flex flex-col items-center justify-center">
-      <h1 className="text-center font-bold mt-9 text-3xl">
-        404 page not found
-      </h1>
-      <p className="text-xl">
-        This page that the user tried to access doesn't exist
-      </p>
-      <Link href="/" className="mt-4 font-bold text-white bg-zinc-950 p-2">
-        Back to Home
-      </Link>
-    </div>
+    <main className="p-8 bg-gray-50 min-h-screen flex items-center justify-center">
+      <div className="text-center">
+        <h2 className="text-3xl mb-4">404 page not found</h2>
+        <p className="text-neutral-950 mb-6">
+          This page that the user tried to access doesn't exist
+        </p>
+        <a
+          href="/"
+          className="rounded-3xl mt-4 font-bold text-white bg-orange-600 hover:brightness-95 py-3 px-4"
+        >
+          ← Back to Store
+        </a>
+      </div>
+    </main>
   );
 }
