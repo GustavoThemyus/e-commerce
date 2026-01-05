@@ -3,6 +3,7 @@
 import ProductImage from "./components/ProductImage";
 import ProductInfo from "./components/ProductInfo";
 import ProductActions from "./components/ProductActions";
+import BackButton from "@/app/components/BackButton";
 
 export default function ProductPageClient({ product }) {
   console.log("🔵 ProductPageClient received:", product);
@@ -13,7 +14,8 @@ export default function ProductPageClient({ product }) {
 
   return (
     <main className="min-h-screen max-w-max gap-12">
-      <h1 className="text-2xl text-black text-center mt-8">PRODUCT</h1>
+      <BackButton className="ml-34 mt-8" />
+      <h1 className="text-2xl text-black text-center">PRODUCT</h1>
       <div className="grid grid-cols-3">
         <div>
           <ProductImage image={product.image} title={product.title} />

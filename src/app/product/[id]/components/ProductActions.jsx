@@ -7,6 +7,7 @@ export default function ProductActions({ product }) {
   const [added, setAdded] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const { addToCart } = useContext(CartContext);
+  const totalPrice = product.price * quantity;
 
   function handleAddToCart() {
     for (let i = 0; i < quantity; i++) {
@@ -16,9 +17,9 @@ export default function ProductActions({ product }) {
   }
 
   return (
-    <div className="p-8 bg-gray-200 rounded-lg w-full max-w-md space-y-4">
+    <div className="p-8 border border-neutral-300 rounded-lg w-full max-w-md space-y-4">
       <div className="gap-1">
-        <h1 className="text-2xl">${product.price}</h1>
+        <h1 className="text-2xl">${totalPrice.toFixed(2)}</h1>
         <p>
           Deliver free: <span className="font-semibold">2 - 3 days</span>
         </p>
@@ -29,7 +30,7 @@ export default function ProductActions({ product }) {
         <div className="flex">
           <button
             onClick={() => setQuantity(Math.max(1, quantity - 1))}
-            className="p-2 border text-black border-neutral-300 bg-gray-200 hover:brightness-95 active:brightness-90 rounded-3xl transition"
+            className="p-2 border text-black border-neutral-300 hover:brightness-95 active:brightness-90 rounded-3xl cursor-pointer transition-all"
             disabled={quantity === 1}
           >
             <Minus
@@ -42,7 +43,7 @@ export default function ProductActions({ product }) {
 
           <button
             onClick={() => setQuantity(quantity + 1)}
-            className="p-3 border text-black border-neutral-300 bg-gray-200 hover:brightness-95 active:brightness-90 rounded-3xl transition"
+            className="p-3 border text-black border-neutral-300 hover:brightness-95 active:brightness-90 rounded-3xl cursor-pointer transition-all"
           >
             <Plus size={16} />
           </button>
@@ -69,7 +70,7 @@ export default function ProductActions({ product }) {
             setAdded(true);
             setTimeout(() => setAdded(false), 2000);
           }}
-          className="w-full bg-orange-600 shadow text-white py-2 rounded-3xl hover:brightness-95 transition cursor-pointer"
+          className="w-full border border-orange-600 text-orange-600 py-2 rounded-3xl hover:bg-orange-600 hover:text-white active:brightness-90 transition-all cursor-pointer"
         >
           Add to cart
         </button>

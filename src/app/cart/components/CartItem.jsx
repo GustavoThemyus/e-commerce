@@ -9,7 +9,7 @@ export default function CartItem({ product }) {
     useContext(CartContext);
 
   return (
-    <div className="flex flex-col justify-between bg-gray-200 shadow rounded-xl w-[600px] min-h-20 px-6">
+    <div className="flex flex-col justify-between border border-neutral-300 rounded-xl w-[600px] min-h-20 px-6">
       <div className="flex justify-center items-center h-20 mt-6 overflow-hidden">
         <Image
           width={200}
@@ -29,13 +29,13 @@ export default function CartItem({ product }) {
         <div className="flex gap-4 text-white">
           <button
             onClick={() => removeFromCart(product.id)}
-            className="px-10 py-1 text-red-700 bg-gray-200 border border-red-700 rounded-3xl hover:brightness-95 transition-colors hover:cursor-pointer active:brightness-90"
+            className="px-10 py-1 text-red-700 border border-red-700 rounded-3xl hover:bg-red-700 hover:text-white active:brightness-90 transition-all cursor-pointer"
           >
             Exclude
           </button>
           <button
             onClick={() => decreaseQuantity(product.id)}
-            className="p-2 border text-black border-neutral-300 bg-gray-200 hover:brightness-95 active:brightness-90 rounded-3xl transition"
+            className="p-2 text-black border border-neutral-300 hover:brightness-95 active:brightness-90 rounded-3xl cursor-pointer transition"
             disabled={product.quantity === 1}
           >
             <Minus
@@ -48,7 +48,7 @@ export default function CartItem({ product }) {
           <p className="text-black mt-2">{product.quantity}</p>
           <button
             onClick={() => increaseQuantity(product.id)}
-            className="p-3 border text-black border-neutral-300 bg-gray-200 hover:brightness-95 active:brightness-90 rounded-3xl transition"
+            className="p-3 text-black border border-neutral-300 hover:brightness-95 active:brightness-90 rounded-3xl cursor-pointer transition"
           >
             <Plus size={18} />
           </button>

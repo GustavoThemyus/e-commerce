@@ -4,6 +4,7 @@ import { CartContext } from "@/context/CartContext";
 import CartList from "./components/CartList";
 import EmptyCart from "./components/EmptyCart";
 import { CartSummary } from "./components/CartSummary";
+import BackButton from "../components/BackButton";
 
 export default function Cart() {
   const { cart } = useContext(CartContext);
@@ -28,6 +29,7 @@ export default function Cart() {
 
   return (
     <main className="p-8 bg-gray-50 min-h-screen">
+      <BackButton className="ml-34 mt-8" />
       <h1 className="text-2xl text-black text-center mb-8">
         MY CART ({cart.length})
       </h1>

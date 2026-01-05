@@ -3,10 +3,6 @@ import CartPageClient from "./CartPageClient";
 export const metadata = {
   title: "Cart | E-Commerce",
   description: "Shopping cart with your selected products",
-  openGraph: {
-    title: "E-Commerce - Cart",
-    description: "Review and manage your shopping cart",
-  },
 };
 
 export default function CartPage() {

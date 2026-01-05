@@ -10,7 +10,7 @@ export default function ProductInfo({
 }) {
   return (
     <div className="pt-12 px-16">
-      <h1 className="text-2xl">{title}</h1>
+      <h1 className="text-2xl font-semibold">{title}</h1>
 
       <div className="flex gap-2 mt-2">
         <p className="text-md flex">

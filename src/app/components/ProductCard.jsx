@@ -8,7 +8,7 @@ export default function ProductCard({ product, addToCart }) {
   const [added, setAdded] = useState(false);
 
   return (
-    <div className="bg-gray-200 rounded-xl shadow flex flex-col justify-between p-6">
+    <div className="rounded-xl border border-neutral-200 flex flex-col justify-between p-6">
       <div className="flex justify-center items-center h-30 overflow-hidden">
         <Image
           width={400}
@@ -52,7 +52,7 @@ export default function ProductCard({ product, addToCart }) {
               setAdded(true);
               setTimeout(() => setAdded(false), 2000);
             }}
-            className="flex justify-center text-white bg-orange-600 rounded-3xl shadow px-14 py-2 hover:brightness-95 transition cursor-pointer active:brightness-90"
+            className="w-full flex justify-center text-orange-600 border border-orange-600 rounded-3xl px-14 py-2 hover:bg-orange-600 hover:text-white active:brightness-90 transition-all cursor-pointer"
           >
             Add to cart
           </button>
@@ -60,7 +60,7 @@ export default function ProductCard({ product, addToCart }) {
           {/* BOTÃO VIEW DETAILS */}
           <Link
             href={`/product/${product.id}`}
-            className="w-full flex justify-center text-white bg-zinc-700 rounded-3xl shadow px-14 py-2 cursor-pointer hover:brightness-95 transition-colors active:brightness-90"
+            className="w-full flex justify-center text-zinc-900 border border-zinc-900 rounded-3xl px-14 py-2 hover:bg-zinc-800 hover:text-white active:brightness-90 transition-all cursor-pointer"
           >
             View details
           </Link>

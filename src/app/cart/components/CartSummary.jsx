@@ -59,8 +59,8 @@ export function CartSummary({ products }) {
   }
 
   return (
-    <div className="bg-gray-200 shadow w-[700px] rounded-lg p-6 sticky top-8">
-      <h2 className="text-black text-2xl mb-6">Order Resume:</h2>
+    <div className="border border-neutral-400 w-[700px] rounded-lg p-6 sticky top-8">
+      <h2 className="text-black font-semibold text-2xl mb-6">Order Resume:</h2>
 
       <div className="space-y-3 mb-6 flex flex-col">
         {/* subtotal */}
@@ -88,7 +88,7 @@ export function CartSummary({ products }) {
         <button
           onClick={handleCheckout}
           disabled={isProcessing}
-          className={`w-full bg-emerald-500 border border-emerald-500 text-white py-3 px-2 rounded-3xl transition ${
+          className={`w-full bg-emerald-500 text-white py-3 px-2 rounded-3xl transition ${
             isProcessing
               ? "opacity-50 cursor-not-allowed"
               : "hover:brightness-95 hover:cursor-pointer active:brightness-90"
@@ -96,6 +96,12 @@ export function CartSummary({ products }) {
         >
           {isProcessing ? "Processing..." : "Purchase"}
         </button>
+
+        {errorMessage && (
+          <div className="mt-4 text-sm text-red-600 text-center">
+            {errorMessage}
+          </div>
+        )}
 
         <Link
           href="/"

@@ -1,15 +1,11 @@
 import { ChevronLeft } from "lucide-react";
 import ProductList from "./components/ProductList";
+import BackButton from "./components/BackButton";
 
 export const metadata = {
   // Informações adicionais que descrevem o conteúdo de uma página
   title: "Home | E-Commerce",
   description: "Home Page",
-  openGraph: {
-    // Responsável pela pré visualização ao compartilhar o link do projeto
-    title: "E-Commerce",
-    description: "E-Commerce with purchase by adding products at Shopping Cart",
-  },
 };
 
 // Home é server component
@@ -40,8 +36,9 @@ export default async function Home() {
 
   return (
     <main className="p-8 bg-gray-50">
-      <div className="mt-8 mb-10">
-        <h1 className="text-2xl text-black text-center">STORE</h1>
+      <BackButton className="ml-34 mt-8" />
+      <div className="">
+        <h1 className="text-2xl text-black text-center mb-8">STORE</h1>
       </div>
 
       {/* Se houver erro, mostra mensagem */}
