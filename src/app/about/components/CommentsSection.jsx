@@ -17,7 +17,7 @@ export default async function CommentsSection() {
 
       <ul className="space-y-4">
         {comments.map((comment) => (
-          <li key={comment.id} className="border p-4 rounded">
+          <li key={comment.id} className="border p-4 rounded-md">
             <p className="font-medium">{comment.author}</p>
             <p className="text-neutral-600">{comment.text}</p>
           </li>

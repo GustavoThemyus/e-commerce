@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { createComment } from "./actions";
+import { createComment } from "../actions";
 
 export default function CommentForm() {
   const [author, setAuthor] = useState("");
@@ -20,17 +20,17 @@ export default function CommentForm() {
         value={author}
         onChange={(e) => setAuthor(e.target.value)}
         placeholder="Your name"
-        className="w-full border p-2 rounded"
+        className="w-full border p-2 rounded-md"
         required
       />
       <textarea
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="Your comment"
-        className="w-full border p-2 rounded"
+        className="w-full border p-2 rounded-md"
         required
       />
-      <button className="px-4 py-2 bg-black text-white rounded">
+      <button className="px-4 py-2 bg-black text-white rounded-md">
         Send comment
       </button>
     </form>
