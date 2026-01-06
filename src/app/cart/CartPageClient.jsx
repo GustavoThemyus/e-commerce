@@ -16,11 +16,7 @@ export default function Cart() {
   }, []);
 
   if (!isClient) {
-    return (
-      <main className="bg-gray-50 text-black text-center mt-20">
-        Loading...
-      </main>
-    );
+    return <main className="text-black text-center mt-20">Loading...</main>;
   }
 
   if (!cart || cart.length === 0) {
@@ -28,17 +24,15 @@ export default function Cart() {
   }
 
   return (
-    <main className="p-8 bg-gray-50 min-h-screen">
-      <BackButton className="ml-34 mt-8" />
-      <h1 className="text-2xl text-black text-center mb-8">
-        MY CART ({cart.length})
-      </h1>
+    <main className="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto space-y-8">
+        <BackButton />
+        <h1 className="text-2xl text-black text-center mb-8">
+          MY CART ({cart.length})
+        </h1>
 
-      <div className="max-w-max mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12">
-        <div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12 items-start">
           <CartList products={cart} />
-        </div>
-        <div>
           <CartSummary products={cart} />
         </div>
       </div>

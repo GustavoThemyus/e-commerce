@@ -9,8 +9,8 @@ export default function CartItem({ product }) {
     useContext(CartContext);
 
   return (
-    <div className="flex flex-col justify-between border border-neutral-300 rounded-xl w-[600px] min-h-20 px-6">
-      <div className="flex justify-center items-center h-20 mt-6 overflow-hidden">
+    <div className="flex flex-col justify-between border border-neutral-300 rounded-xl w-full sm:max-w-md min-h-20 px-4 sm:px-6 mx-auto">
+      <div className="flex justify-center items-center h-28 sm:h-32 mt-4 sm:mt-6 overflow-hidden">
         <Image
           width={200}
           height={200}

@@ -8,7 +8,7 @@ export default function ProductList({ products }) {
 
   if (!isHydrated) {
     return (
-      <div className="grid grid-cols-4 gap-16 px-16">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-10">
         {products.map((product) => (
           <div
             key={product.id}
@@ -24,7 +24,7 @@ export default function ProductList({ products }) {
   }
 
   return (
-    <div className="grid grid-cols-4 gap-16 px-16">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-10">
       {products.map((product) => (
         <ProductCard
           key={product.id}

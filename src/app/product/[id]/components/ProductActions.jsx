@@ -17,7 +17,7 @@ export default function ProductActions({ product }) {
   }
 
   return (
-    <div className="p-8 border border-neutral-300 rounded-lg w-full max-w-md space-y-4">
+    <div className="border border-neutral-300 rounded-lg p-4 sm:p-6 w-full max-w-md mx-auto space-y-4">
       <div className="gap-1">
         <h1 className="text-2xl">${totalPrice.toFixed(2)}</h1>
         <p>
@@ -53,7 +53,7 @@ export default function ProductActions({ product }) {
       <div className="relative">
         {/* Mensagem - absolute */}
         <p
-          className={`absolute -top-8 right-9 text-emerald-700 text-sm whitespace-nowrap transition-all duration-300 flex items-center gap-2 ${
+          className={`absolute -top-6 right-4 text-emerald-700 text-sm whitespace-nowrap transition-all duration-300 flex items-center gap-2 ${
             added
               ? "opacity-100 translate-y-0"
               : "opacity-0 translate-y-2 pointer-events-none"

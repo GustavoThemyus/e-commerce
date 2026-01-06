@@ -1,7 +1,7 @@
 export default function NotFound() {
   return (
-    <main className="p-8 bg-gray-50 min-h-screen flex items-center justify-center">
-      <div className="text-center">
+    <main className="min-h-screen flex items-center justify-center">
+      <div className="text-center px-4">
         <h2 className="text-3xl mb-4">Product not found</h2>
         <p className="text-neutral-950 mb-6">We couldn't load this product</p>
         <a

@@ -1,4 +1,3 @@
-import { ChevronLeft } from "lucide-react";
 import ProductList from "./components/ProductList";
 import BackButton from "./components/BackButton";
 
@@ -8,7 +7,6 @@ export const metadata = {
   description: "Home Page",
 };
 
-// Home é server component
 export default async function Home() {
   let products = [];
   let error = null;
@@ -35,32 +33,34 @@ export default async function Home() {
   }
 
   return (
-    <main className="p-8 bg-gray-50">
-      <BackButton className="ml-34 mt-8" />
-      <div className="">
-        <h1 className="text-2xl text-black text-center mb-8">STORE</h1>
-      </div>
+    <main className="py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <BackButton className="mb-6" />
+        <div className="">
+          <h1 className="text-2xl text-black text-center mb-8">STORE</h1>
+        </div>
 
-      {/* Se houver erro, mostra mensagem */}
-      {error ? (
-        <div className="text-center text-white mt-20">
-          <div className="bg-red-900/20 border border-red-500 rounded-lg p-8 max-w-md mx-auto">
-            <h2 className="text-2xl font-bold mb-4">
-              Ops! Something goes wrong
-            </h2>
-            <p className="mb-4">Couldn't load products..</p>
-            <p className="text-sm text-gray-400 mb-6">Erro: {error}</p>
+        {/* Se houver erro, mostra mensagem */}
+        {error ? (
+          <div className="text-center text-white mt-20">
+            <div className="bg-red-900/20 border border-red-500 rounded-lg p-8 max-w-md mx-auto">
+              <h2 className="text-2xl font-bold mb-4">
+                Ops! Something goes wrong
+              </h2>
+              <p className="mb-4">Couldn't load products..</p>
+              <p className="text-sm text-gray-400 mb-6">Erro: {error}</p>
+            </div>
           </div>
-        </div>
-      ) : products.length === 0 ? (
-        // Se não tiver produtos mas também não tiver erro
-        <div className="text-center text-white mt-20">
-          <p className="text-xl">No products found.</p>
-        </div>
-      ) : (
-        // Se tudo deu certo, mostra os produtos
-        <ProductList products={products} />
-      )}
+        ) : products.length === 0 ? (
+          // Se não tiver produtos mas também não tiver erro
+          <div className="text-center text-white mt-20">
+            <p className="text-xl">No products found.</p>
+          </div>
+        ) : (
+          // Se tudo deu certo, mostra os produtos
+          <ProductList products={products} />
+        )}
+      </div>
     </main>
   );
 }

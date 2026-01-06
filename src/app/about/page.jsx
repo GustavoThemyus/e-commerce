@@ -9,9 +9,11 @@ export const metadata = {
 
 export default async function AboutPage() {
   return (
-    <main className="max-w-3xl mx-auto px-6 py-12 space-y-10">
-      <AboutPageClient />
-      <CommentsSection />
+    <main className="py-8 min-h-screen space-y-12">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <AboutPageClient />
+        <CommentsSection />
+      </div>
     </main>
   );
 }

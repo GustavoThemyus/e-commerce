@@ -6,21 +6,19 @@ import ProductActions from "./components/ProductActions";
 import BackButton from "@/app/components/BackButton";
 
 export default function ProductPageClient({ product }) {
-  console.log("🔵 ProductPageClient received:", product);
-
   if (!product) {
     return <div className="p-8 text-center">Loading...</div>;
   }
 
   return (
-    <main className="min-h-screen max-w-max gap-12">
-      <BackButton className="ml-34 mt-8" />
-      <h1 className="text-2xl text-black text-center">PRODUCT</h1>
-      <div className="grid grid-cols-3">
-        <div>
+    <main className="py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        <BackButton />
+
+        <h1 className="text-2xl text-black text-center">PRODUCT</h1>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <ProductImage image={product.image} title={product.title} />
-        </div>
-        <div>
           <ProductInfo
             title={product.title}
             description={product.description}
@@ -28,8 +26,6 @@ export default function ProductPageClient({ product }) {
             category={product.category}
             price={product.price}
           />
-        </div>
-        <div>
           <ProductActions product={product} />
         </div>
       </div>

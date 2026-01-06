@@ -8,14 +8,14 @@ export default function ProductCard({ product, addToCart }) {
   const [added, setAdded] = useState(false);
 
   return (
-    <div className="rounded-xl border border-neutral-200 flex flex-col justify-between p-6">
+    <div className="rounded-xl border border-neutral-200 flex flex-col justify-between p-4 sm:p-6 h-full">
       <div className="flex justify-center items-center h-30 overflow-hidden">
         <Image
           width={400}
           height={400}
           src={product.image}
           alt={product.title}
-          className="w-40 max-h-24 object-contain"
+          className="w-32 sm:w-40 max-h-28 object-contain"
         />
       </div>
 
@@ -52,7 +52,7 @@ export default function ProductCard({ product, addToCart }) {
               setAdded(true);
               setTimeout(() => setAdded(false), 2000);
             }}
-            className="w-full flex justify-center text-orange-600 border border-orange-600 rounded-3xl px-14 py-2 hover:bg-orange-600 hover:text-white active:brightness-90 transition-all cursor-pointer"
+            className="w-full flex justify-center text-orange-600 border border-orange-600 rounded-3xl px-6 py-2 hover:bg-orange-600 hover:text-white active:brightness-90 transition-all cursor-pointer"
           >
             Add to cart
           </button>
@@ -60,7 +60,7 @@ export default function ProductCard({ product, addToCart }) {
           {/* BOTÃO VIEW DETAILS */}
           <Link
             href={`/product/${product.id}`}
-            className="w-full flex justify-center text-zinc-900 border border-zinc-900 rounded-3xl px-14 py-2 hover:bg-zinc-800 hover:text-white active:brightness-90 transition-all cursor-pointer"
+            className="w-full flex justify-center text-zinc-900 border border-zinc-900 rounded-3xl px-6 py-2 hover:bg-zinc-800 hover:text-white active:brightness-90 transition-all cursor-pointer"
           >
             View details
           </Link>

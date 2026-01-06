@@ -3,8 +3,8 @@ import BackButton from "../components/BackButton";
 
 export default function AboutPageClient() {
   return (
-    <main className="max-w-3xl mx-auto px-6">
-      <BackButton className="mb-4 -ml-50" />
+    <div className="space-y-6">
+      <BackButton className="mb-2" />
       <section className="space-y-4">
         <h1 className="text-3xl font-semibold">About this project</h1>
         <p className="text-neutral-700 leading-relaxed">
@@ -15,6 +15,6 @@ export default function AboutPageClient() {
           The focus is on performance, simplicity, and maintainability.
         </p>
       </section>
-    </main>
+    </div>
   );
 }

@@ -20,17 +20,17 @@ export default function CommentForm() {
         value={author}
         onChange={(e) => setAuthor(e.target.value)}
         placeholder="Your name"
-        className="w-full border p-2 rounded-md"
+        className="w-full border p-3 rounded-md text-sm sm:text-base"
         required
       />
       <textarea
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="Your comment"
-        className="w-full border p-2 rounded-md"
+        className="w-full border p-3 rounded-md text-sm sm:text-base"
         required
       />
-      <button className="px-4 py-2 bg-black text-white rounded-md">
+      <button className="w-full sm:w-auto px-4 py-2 border border-zinc-950 text-zinc-950 hover:bg-zinc-950 hover:text-white active:brightness-110 rounded-md transition-all cursor-pointer">
         Send comment
       </button>
     </form>

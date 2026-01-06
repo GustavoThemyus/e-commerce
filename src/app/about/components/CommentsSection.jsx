@@ -12,14 +12,16 @@ export default async function CommentsSection() {
   const comments = await getComments();
 
   return (
-    <section className="space-y-6">
-      <h2 className="text-2xl font-semibold">Comments</h2>
+    <section className="space-y-6 mt-8">
+      <h2 className="text-2xl sm:text-3xl font-semibold">Comments</h2>
 
       <ul className="space-y-4">
         {comments.map((comment) => (
           <li key={comment.id} className="border p-4 rounded-md">
             <p className="font-medium">{comment.author}</p>
-            <p className="text-neutral-600">{comment.text}</p>
+            <p className="text-neutral-600 text-sm sm:text-base">
+              {comment.text}
+            </p>
           </li>
         ))}
       </ul>

@@ -59,7 +59,7 @@ export function CartSummary({ products }) {
   }
 
   return (
-    <div className="border border-neutral-400 w-[700px] rounded-lg p-6 sticky top-8">
+    <div className="border border-neutral-400 w-full sm:max-w-md rounded-lg p-4 sm:p-6 mx-auto lg:sticky lg:top-8">
       <h2 className="text-black font-semibold text-2xl mb-6">Order Resume:</h2>
 
       <div className="space-y-3 mb-6 flex flex-col">

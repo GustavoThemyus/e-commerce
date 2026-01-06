@@ -13,8 +13,8 @@ export const metadata = {
 
 export default function NotFound() {
   return (
-    <main className="p-8 bg-gray-50 min-h-screen flex items-center justify-center">
-      <div className="text-center">
+    <main className="min-h-screen flex items-center justify-center">
+      <div className="text-center px-4">
         <h2 className="text-3xl mb-4">404 page not found</h2>
         <p className="text-neutral-950 mb-6">
           This page that the user tried to access doesn't exist

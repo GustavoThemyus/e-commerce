@@ -5,10 +5,11 @@ import { CartProvider } from "@/context/CartContext";
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`antialiased`}>
+      <body className="antialiased">
         <CartProvider>
           <Header />
-          {children}
+
+          <div className="w-full px-4 sm:px-6 lg:px-8">{children}</div>
         </CartProvider>
       </body>
     </html>
