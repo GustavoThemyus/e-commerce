@@ -17,7 +17,7 @@ export default function ProductPageClient({ product }) {
 
         <h1 className="text-2xl text-black text-center">PRODUCT</h1>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
           <ProductImage image={product.image} title={product.title} />
           <ProductInfo
             title={product.title}

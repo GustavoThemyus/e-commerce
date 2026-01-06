@@ -70,7 +70,7 @@ export default function ProductActions({ product }) {
             setAdded(true);
             setTimeout(() => setAdded(false), 2000);
           }}
-          className="w-full border border-orange-600 text-orange-600 py-2 rounded-3xl hover:bg-orange-600 hover:text-white active:brightness-90 transition-all cursor-pointer"
+          className="w-full border bg-orange-600 text-white py-2 rounded-3xl hover:brightness-95 active:brightness-90 transition-all cursor-pointer"
         >
           Add to cart
         </button>

@@ -52,7 +52,7 @@ export default function ProductCard({ product, addToCart }) {
               setAdded(true);
               setTimeout(() => setAdded(false), 2000);
             }}
-            className="w-full flex justify-center text-orange-600 border border-orange-600 rounded-3xl px-6 py-2 hover:bg-orange-600 hover:text-white active:brightness-90 transition-all cursor-pointer"
+            className="w-full flex justify-center text-white border bg-orange-600 rounded-3xl px-6 py-2 hover:brightness-95 active:brightness-90 transition-all cursor-pointer"
           >
             Add to cart
           </button>
