@@ -1,15 +1,35 @@
+"use client";
 import CommentForm from "./CommentForm";
+import { useEffect, useState } from "react";
 
 // mock — depois trocar por DB
-async function getComments() {
-  return [
-    { id: 1, author: "John", text: "Great project!" },
-    { id: 2, author: "Anna", text: "Clean UI and structure." },
-  ];
-}
+const MOCK_COMMENTS = [
+  { id: 1, author: "Xanglus", text: "Great project!" },
+  { id: 2, author: "Jv", text: "Clean UI and structure." },
+];
 
-export default async function CommentsSection() {
-  const comments = await getComments();
+export default function CommentsSection() {
+  const [comments, setComments] = useState(MOCK_COMMENTS);
+
+  useEffect(() => {
+    const localComments = JSON.parse(localStorage.getItem("comments")) || "[]";
+    setComments([...MOCK_COMMENTS, ...localComments]);
+  }, []);
+
+  function handleNewComment(comment) {
+    const updateLocal = JSON.parse(localStorage.getItem("comments") || "[]");
+
+    const newComment = {
+      ...comment,
+      id: Date.now(),
+    };
+
+    const newLocalComments = [...updateLocal, newComment];
+
+    localStorage.setItem("comments", JSON.stringify(newLocalComments));
+
+    setComments([...MOCK_COMMENTS, ...newLocalComments]);
+  }
 
   return (
     <section className="space-y-6 mt-8">
@@ -26,7 +46,7 @@ export default async function CommentsSection() {
         ))}
       </ul>
 
-      <CommentForm />
+      <CommentForm onAddComment={handleNewComment} />
     </section>
   );
 }

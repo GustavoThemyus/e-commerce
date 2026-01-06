@@ -3,13 +3,13 @@
 import { useState } from "react";
 import { createComment } from "../Actions";
 
-export default function CommentForm() {
+export default function CommentForm({ onAddComment }) {
   const [author, setAuthor] = useState("");
   const [text, setText] = useState("");
 
-  async function handleSubmit(e) {
+  function handleSubmit(e) {
     e.preventDefault();
-    await createComment({ author, text });
+    onAddComment({ author, text });
     setAuthor("");
     setText("");
   }

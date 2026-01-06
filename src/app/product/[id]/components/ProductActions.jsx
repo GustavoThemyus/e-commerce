@@ -30,7 +30,7 @@ export default function ProductActions({ product }) {
         <div className="flex">
           <button
             onClick={() => setQuantity(Math.max(1, quantity - 1))}
-            className="p-2 border text-black border-neutral-300 hover:brightness-95 active:brightness-90 rounded-3xl cursor-pointer transition-all"
+            className="p-2 border text-black border-neutral-300 hover:brightness-90 active:brightness-75 rounded-3xl cursor-pointer transition-all"
             disabled={quantity === 1}
           >
             <Minus
@@ -43,7 +43,7 @@ export default function ProductActions({ product }) {
 
           <button
             onClick={() => setQuantity(quantity + 1)}
-            className="p-3 border text-black border-neutral-300 hover:brightness-95 active:brightness-90 rounded-3xl cursor-pointer transition-all"
+            className="p-3 border text-black border-neutral-300 hover:brightness-90 active:brightness-75 rounded-3xl cursor-pointer transition-all"
           >
             <Plus size={16} />
           </button>

@@ -65,8 +65,8 @@ export function CartSummary({ products }) {
       <div className="space-y-3 mb-6 flex flex-col">
         {/* subtotal */}
         <div className="text-black flex flex-col">
-          <span>Subtotal: {totalItems} item(s)</span>
-          <span>Total: ${total.toFixed(2)}</span>
+          <span>Quantity: {totalItems} item(s)</span>
+          <span>Subotal: ${total.toFixed(2)}</span>
         </div>
 
         <div className="flex gap-1">

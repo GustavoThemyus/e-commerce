@@ -35,7 +35,7 @@ export default function CartItem({ product }) {
           </button>
           <button
             onClick={() => decreaseQuantity(product.id)}
-            className="p-2 text-black border border-neutral-300 hover:brightness-95 active:brightness-90 rounded-3xl cursor-pointer transition"
+            className="p-2 text-black border border-neutral-300 hover:brightness-90 active:brightness-75 rounded-3xl cursor-pointer transition"
             disabled={product.quantity === 1}
           >
             <Minus
@@ -48,7 +48,7 @@ export default function CartItem({ product }) {
           <p className="text-black mt-2">{product.quantity}</p>
           <button
             onClick={() => increaseQuantity(product.id)}
-            className="p-3 text-black border border-neutral-300 hover:brightness-95 active:brightness-90 rounded-3xl cursor-pointer transition"
+            className="p-3 text-black border border-neutral-300 hover:brightness-90 active:brightness-75 rounded-3xl cursor-pointer transition"
           >
             <Plus size={18} />
           </button>
