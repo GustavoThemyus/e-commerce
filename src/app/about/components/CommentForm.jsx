@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { createComment } from "../actions";
+import { createComment } from "../Actions";
 
 export default function CommentForm() {
   const [author, setAuthor] = useState("");
