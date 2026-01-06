@@ -9,7 +9,12 @@ const MOCK_COMMENTS = [
     author: "F",
     text: "If you're reading this, there's someone who loves you so much.",
   },
-  { id: 2, author: "G", text: "And this is for you." },
+  {
+    id: 2,
+    author: "G",
+    text: "Whether it's day or night, sunny or rainy, hot or cold, spring or winter, I will always love you and want to spend every moment and breath close to you. Looking into your eyes, smelling your scent, giving you flowers, every type, listening to you talk, absorbing cinema, immersing myself in Barbie stories. With a silver or paper ring, listening to classics from the 70s or 80s, watching the Oscars or Tarantino references, driving a Mustang or a simple Chevette in the future, in a house or a mansion, with many, few, or no children. It doesn't matter where or how, no matter the scenario I imagine spending the rest of my life with you, the only scenario I can't imagine is one where you're not there. I love you, my doll. So much.",
+  },
+  { id: 3, author: "FG", text: "And this is for you." },
 ];
 
 export default function CommentsSection() {
