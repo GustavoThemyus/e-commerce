@@ -11,7 +11,11 @@ async function fetchProduct(id) {
   const response = await fetch(
     `https://fakestoreapi.com/products/${numericId}`,
     {
-      headers: { Accept: "application/json" },
+      headers: {
+        Accept: "application/json",
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+      },
       cache: "no-store",
     }
   );
@@ -26,7 +30,8 @@ async function fetchProduct(id) {
 }
 
 export async function generateMetadata({ params }) {
-  const { id } = await params;
+  const resolvedParams = await params;
+  const { id } = resolvedParams;
 
   try {
     const product = await fetchProduct(id);
@@ -44,7 +49,8 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function ProductPage({ params }) {
-  const { id } = await params;
+  const resolvedParams = await params;
+  const { id } = resolvedParams;
 
   try {
     const product = await fetchProduct(id);
