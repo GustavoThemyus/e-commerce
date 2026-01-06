@@ -1,6 +1,8 @@
 import ProductList from "./components/ProductList";
 import BackButton from "./components/BackButton";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   // Informações adicionais que descrevem o conteúdo de uma página
   title: "Home | E-Commerce",
