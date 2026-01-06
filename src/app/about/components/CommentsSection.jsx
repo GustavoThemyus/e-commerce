@@ -4,8 +4,12 @@ import { useEffect, useState } from "react";
 
 // mock — depois trocar por DB
 const MOCK_COMMENTS = [
-  { id: 1, author: "Xanglus", text: "Great project!" },
-  { id: 2, author: "Jv", text: "Clean UI and structure." },
+  {
+    id: 1,
+    author: "F",
+    text: "If you're reading this, there's someone who loves you so much.",
+  },
+  { id: 2, author: "G", text: "And this is for you." },
 ];
 
 export default function CommentsSection() {
