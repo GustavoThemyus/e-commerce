@@ -5,12 +5,12 @@
 **Products are fetched from an external API, and cart data is stored in Local Storage for persistence.**  
 
 ### Features
-🛍️ Product listing: browse products fetched dynamically from an external API.
-🔍 View product details: access individual product pages with full information.
-➕ Add to cart: add products to the shopping cart with quantity control.
-🧮 Dynamic pricing: total price updates automatically based on quantity.
-🛒 Persistent cart: cart data is saved in localStorage and persists after reload.
-⚡ Smooth navigation: fast page transitions powered by Next.js App Router.
+- 🛍️ **Product listing:** browse products fetched dynamically from an external API.
+- 🔍 **View product details:** access individual product pages with full information.
+- ➕ **Add to cart:** add products to the shopping cart with quantity control.
+- 🧮 **Dynamic pricing:** total price updates automatically based on quantity.
+- 🛒 **Persistent cart:** cart data is saved in localStorage and persists after reload.
+- ⚡ **Smooth navigation:** fast page transitions powered by Next.js App Router.
   
 ### Technologies
 - **Next.js** — App Router, Server Components, and Client Components
