@@ -28,7 +28,9 @@
   
 #### Try browsing products, viewing details, and adding items to the cart directly in your browser — no local setup required.
 
-![Home page](public/images/home.png)
+<p align="center">
+  <img src="public/images/home.png" width="600" />
+</p>
 ![Product page](public/images/product.png)
 ![Cart page](public/images/cart.png)
 ![About page](public/images/about.png)
