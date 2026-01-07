@@ -31,6 +31,16 @@
 <p align="center">
   <img src="public/images/home.png" width="600" />
 </p>
-![Product page](public/images/product.png)
-![Cart page](public/images/cart.png)
-![About page](public/images/about.png)
+
+<p align="center">
+  <img src="public/images/product.png" width="600" />
+</p>
+
+<p align="center">
+  <img src="public/images/cart.png" width="600" />
+</p>
+
+<p align="center">
+  <img src="public/images/about.png" width="600" />
+</p>
+
