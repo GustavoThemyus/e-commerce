@@ -10,6 +10,27 @@
 !.yarn/releases
 !.yarn/versions
 
+# frontend
+frontend/node_modules
+frontend/.next
+frontend/out
+frontend/.env.local
+frontend/.env.production
+
+# Backend
+backend/node_modules
+backend/.env
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
 # testing
 /coverage
 
