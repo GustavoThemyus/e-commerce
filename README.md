@@ -27,3 +27,20 @@
 👉 [Run the project](https://e-commerce-ten-psi-71.vercel.app/)  
   
 #### Try browsing products, viewing details, and adding items to the cart directly in your browser — no local setup required.
+
+<p align="center">
+  <img src="public/images/home.png" width="600" />
+</p>
+
+<p align="center">
+  <img src="public/images/product.png" width="600" />
+</p>
+
+<p align="center">
+  <img src="public/images/cart.png" width="600" />
+</p>
+
+<p align="center">
+  <img src="public/images/about.png" width="600" />
+</p>
+
