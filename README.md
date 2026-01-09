@@ -24,7 +24,7 @@
   
 ### 🌐 Live Demo
 #### The project is deployed and can be accessed at:  
-👉 [Run the project](https://e-commerce-ten-psi-71.vercel.app/)  
+👉 [Run the project](https://e-commerce-ruby-mu-84.vercel.app/)  
   
 #### Try browsing products, viewing details, and adding items to the cart directly in your browser — no local setup required.
 
