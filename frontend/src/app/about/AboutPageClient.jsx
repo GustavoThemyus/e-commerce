@@ -9,7 +9,8 @@ export default function AboutPageClient() {
         <h1 className="text-3xl font-semibold">About this project</h1>
         <p className="text-neutral-700 leading-relaxed">
           This e-commerce project was built to practice modern React, Next.js
-          App Router, Server Components, and clean UI architecture.
+          App Router, Server Components, PostgreSQL, data base and clean UI
+          architecture.
         </p>
         <p className="text-neutral-700 leading-relaxed">
           The focus is on performance, simplicity, and maintainability.
