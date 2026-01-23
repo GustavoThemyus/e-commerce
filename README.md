@@ -99,7 +99,7 @@ This behavior is intentional and documented to comply with the challenge require
 `npm install`
 
 3. Create a .env file in the backend root:
-`RESEND_API_KEY=your_resend_api_key`
+`RESEND_API_KEY=re_5NMzJXPK_Cc9MtRQaGW7FnsjQCcfQ5L6V`
 
 4. Start the server:
 `node src/server.js`
