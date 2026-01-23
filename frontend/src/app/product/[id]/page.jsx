@@ -9,7 +9,7 @@ async function fetchProduct(id) {
   }
 
   const response = await fetch(
-    `https://fakestoreapi.com/products/${numericId}`,
+    `http://localhost:3333/api/product/${numericId}`,
     {
       headers: {
         Accept: "application/json",

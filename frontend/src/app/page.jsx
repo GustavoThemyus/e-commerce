@@ -15,7 +15,7 @@ export default async function Home() {
 
   // Busca os produtos na API (servidor)
   try {
-    const response = await fetch("https://fakestoreapi.com/products", {
+    const response = await fetch("http://localhost:3333/api/product", {
       headers: {
         "User-Agent":
           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
