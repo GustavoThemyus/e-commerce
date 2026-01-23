@@ -1,4 +1,4 @@
-# # E-commerce Application (Frontend + Backend)
+#E-commerce Application (Frontend + Backend)
   
 **This project is a full-stack e-commerce application developed as part of a technical challenge.**
 **The application simulates an online store with product listing, shopping cart management, and checkout flow, integrating a React/Next.js frontend with a Node.js + PostgreSQL backend.**
