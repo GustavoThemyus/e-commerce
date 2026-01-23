@@ -1,32 +1,131 @@
-# E-Commerce  
+# # E-commerce Application (Frontend + Backend)
   
-**A simple and modern e-commerce application focused on product listing and shopping cart experience.**  
-**Built with Next.js (App Router), using Tailwind CSS for a clean, responsive interface.**  
-**Products are fetched from an external API, and cart data is stored in Local Storage for persistence.**  
+**This project is a full-stack e-commerce application developed as part of a technical challenge.**
+**The application simulates an online store with product listing, shopping cart management, and checkout flow, integrating a React/Next.js frontend with a Node.js + PostgreSQL backend.**
+**The focus of the project is clean architecture, API communication, state management, and persistence of data.**
 
-### Features
-- 🛍️ **Product listing:** browse products fetched dynamically from an external API.
-- 🔍 **View product details:** access individual product pages with full information.
-- ➕ **Add to cart:** add products to the shopping cart with quantity control.
-- 🧮 **Dynamic pricing:** total price updates automatically based on quantity.
-- 🛒 **Persistent cart:** cart data is saved in localStorage and persists after reload.
-- ⚡ **Smooth navigation:** fast page transitions powered by Next.js App Router.
+
+## Features
+
+### Frontend
+- Product listing with name, description, price and image
+- Individual product page
+- Shopping cart with:
+  - Add products
+  - Update quantities
+  - Remove items
+  - Item subtotal calculation
+- Total purchase value calculation
+- Checkout flow with email input and validation
+- Integration with backend API
+- Responsive layout
+
+### Backend
+- RESTful API for e-commerce operations
+- Endpoints:
+  - `GET /api/product` – list all products
+  - `GET /api/product/:id` – get product details
+  - `POST /api/cart` – add items to cart (in-memory)
+  - `PUT /api/cart` – update cart items
+  - `POST /api/checkout` – finalize purchase
+- Purchase persistence in PostgreSQL database
+- Email confirmation sent on checkout (testing mode)
+
   
-### Technologies
-- **Next.js** — App Router, Server Components, and Client Components
-- **React** — Component-based UI and state management
-- **Tailwind CSS** — Clean, responsive, and modern styling 
-- **Lucide React** — Consistent and lightweight icons 
-- **Context API** — Global cart state management  
-- **Fetch API** — Data fetching from external product API
-- **LocalStorage API** — Persistent shopping cart storage
-- **Vercel** — Deployment and hosting  
-  
-### 🌐 Live Demo
-#### The project is deployed and can be accessed at:  
-👉 [Run the project](https://e-commerce-ruby-mu-84.vercel.app/)  
-  
-#### Try browsing products, viewing details, and adding items to the cart directly in your browser — no local setup required.
+## Technologies
+
+### Frontend
+- Next.js (App Router)
+- React
+- Tailwind CSS
+- Context API
+- LocalStorage
+
+### Backend
+- Node.js
+- Express
+- PostgreSQL
+- pg (node-postgres)
+- Resend (email service)
+- dotenv
+
+
+## Project Structure
+
+### frontend/
+- src/
+- app/
+- components/
+- context/
+    
+### backend/
+- src/
+- controllers/
+- models/
+- routes/
+- services/
+- config/
+- server.js
+
+
+## Database
+The project uses PostgreSQL as a relational database.
+Main tables:
+- `products` – stores available products
+- `sales` – stores completed purchases and cart snapshot
+- `cart` – temporary cart storage (optional, in-memory currently used)
+
+- Product ratings are stored using separate fields (`rating_rate` and `rating_count`) and formatted in the API response to match frontend expectations.
+
+
+## Email Confirmation
+The checkout process attempts to send a purchase confirmation email using the Resend service.
+
+Due to Resend testing limitations:
+- Emails can only be sent to the verified email address of the account owner
+- When sending to other emails, the purchase is still completed successfully
+- The API response informs whether the email was sent or skipped
+
+This behavior is intentional and documented to comply with the challenge requirements while respecting the email provider constraints.
+
+
+## Running the project locally
+
+### Backend
+1. Navigate to the backend folder:
+`cd backend`
+
+2. Install dependencies:
+`npm install`
+
+3. Create a .env file in the backend root:
+`RESEND_API_KEY=your_resend_api_key`
+
+4. Start the server:
+`node src/server.js`
+
+Backend will run on:
+`http://localhost:3333`
+
+### Frontend
+1. Navigate to the frontend folder:
+`cd frontend`
+
+2. Install dependencies:
+`npm install`
+
+3. Run the development server:
+`npm run dev`
+
+Frontend will be available at:
+`http://localhost:3000`
+
+
+## Notes
+- The cart is stored in memory for simplicity, as allowed by the challenge
+- The project prioritizes clarity, separation of concerns and clean code
+- The backend is ready to be extended with authentication, payment integration or persistent carts
+
 
 <p align="center">
   <img src="frontend/public/images/home.png" width="600" />
