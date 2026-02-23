@@ -1,10 +1,10 @@
 import { Resend } from "resend";
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-export async function sendPurchaseEmail(to, items, total) {
+export async function sendPurchaseEmail(client, items, total) {
   const { data, error } = await resend.emails.send({
-    from: "E-Commerce <onboarding@resend.dev>",
-    to,
+    from: "E-Commerce <gustavothemyus@gmail.com>",
+    to: client,
     subject: "Purchase confirmation",
     html: `
       <h2>Purchase confirmed</h2>
