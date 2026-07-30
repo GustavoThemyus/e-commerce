@@ -53,6 +53,8 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+# ...exceto os templates, que devem ir pro git (não contêm segredos)
+!.env.example
 
 # vercel
 .vercel
