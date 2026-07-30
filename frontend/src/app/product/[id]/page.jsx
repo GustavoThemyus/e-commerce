@@ -1,5 +1,6 @@
 import ProductPageClient from "./ProductPageClient";
 import { notFound } from "next/navigation";
+import { API_URL } from "@/lib/api";
 
 async function fetchProduct(id) {
   const numericId = Number(id);
@@ -9,7 +10,7 @@ async function fetchProduct(id) {
   }
 
   const response = await fetch(
-    `http://localhost:3333/api/product/${numericId}`,
+    `${API_URL}/api/product/${numericId}`,
     {
       headers: {
         Accept: "application/json",

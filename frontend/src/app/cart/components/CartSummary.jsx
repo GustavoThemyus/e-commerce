@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { CheckCircle, Ban, CircleX } from "lucide-react";
+import { API_URL } from "@/lib/api";
 
 export function CartSummary({ products }) {
   const [isProcessing, setIsProcessing] = useState(false);
@@ -59,7 +60,7 @@ export function CartSummary({ products }) {
         customer_email: email,
       };
 
-      const response = await fetch("http://localhost:3333/api/checkout", {
+      const response = await fetch(`${API_URL}/api/checkout`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(orderData),

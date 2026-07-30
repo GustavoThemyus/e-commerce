@@ -1,5 +1,6 @@
 import ProductList from "./components/ProductList";
 import BackButton from "./components/BackButton";
+import { API_URL } from "@/lib/api";
 
 export const dynamic = "force-dynamic";
 
@@ -15,7 +16,7 @@ export default async function Home() {
 
   // Busca os produtos na API (servidor)
   try {
-    const response = await fetch("http://localhost:3333/api/product", {
+    const response = await fetch(`${API_URL}/api/product`, {
       headers: {
         "User-Agent":
           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
