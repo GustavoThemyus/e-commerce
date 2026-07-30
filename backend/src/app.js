@@ -1,5 +1,5 @@
-import dotenv from "dotenv";
-dotenv.config();
+// Precisa vir antes dos imports que leem process.env (imports em ESM são hoisted)
+import "dotenv/config";
 
 import express from "express";
 import cors from "cors";
