@@ -20,6 +20,7 @@ export async function listProducts(req, res) {
 
     res.json(formattedProducts);
   } catch (error) {
+    console.error("Failed to fetch products:", error);
     res.status(500).json({ error: "Failed to fetch products" });
   }
 }
@@ -48,6 +49,7 @@ export async function getProduct(req, res) {
 
     res.json(formattedProduct);
   } catch (error) {
+    console.error("Failed to fetch product:", error);
     res.status(500).json({ error: "Failed to fetch product" });
   }
 }
