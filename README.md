@@ -84,11 +84,15 @@ docker compose up -d
 ```
 
 Starts PostgreSQL on port 5432 and applies [`backend/schema.sql`](backend/schema.sql)
-automatically on the first run, creating both tables and inserting the products. Use:
+automatically on the first run, creating both tables and inserting the products. This is the
+value `.env.example` already ships with, so no editing is needed:
 
 ```
 DATABASE_URL=postgresql://postgres:postgres@localhost:5432/ecommerce
 ```
+
+The command returns before the database has finished initializing. Wait for
+`docker compose ps` to report `healthy` before starting the backend.
 
 To wipe it and start from a clean database, run `docker compose down -v` and bring it up again.
 
