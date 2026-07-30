@@ -10,6 +10,21 @@ if (!connectionString) {
   );
 }
 
+// Placeholder não substituído: sem isso o pg quebra com erro interno na 1a query
+if (/[<>]/.test(connectionString) || /\[YOUR-PASSWORD\]/i.test(connectionString)) {
+  throw new Error(
+    "DATABASE_URL ainda tem o placeholder do .env.example. Troque <ref>, <senha> e <regiao> pelos dados do seu banco, e substitua o [YOUR-PASSWORD] inteiro (colchetes incluídos) pela senha.",
+  );
+}
+
+try {
+  new URL(connectionString);
+} catch {
+  throw new Error(
+    "DATABASE_URL não é uma URI válida. Formato: postgresql://usuario:senha@host:porta/banco",
+  );
+}
+
 // Banco na nuvem exige SSL, local não
 const isLocal =
   connectionString.includes("localhost") ||
