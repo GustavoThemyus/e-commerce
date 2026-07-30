@@ -42,6 +42,7 @@ own and resets when the server restarts.
 ## Project structure
 
 ```
+docker-compose.yml  local postgres for development
 backend/
   schema.sql        tables and seed data
   src/
@@ -55,6 +56,7 @@ frontend/
   src/
     app/            routes, pages and components
     context/        cart state
+    lib/            api base url
 ```
 
 ## Database
@@ -73,6 +75,25 @@ Schema and seed data (20 products): [`backend/schema.sql`](backend/schema.sql)
 
 ### 1. Database
 
+Pick either option. Docker is faster and needs no account.
+
+**Option A: Docker**
+
+```bash
+docker compose up -d
+```
+
+Starts PostgreSQL on port 5432 and applies [`backend/schema.sql`](backend/schema.sql)
+automatically on the first run, creating both tables and inserting the products. Use:
+
+```
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/ecommerce
+```
+
+To wipe it and start from a clean database, run `docker compose down -v` and bring it up again.
+
+**Option B: Supabase**
+
 1. Create a project at [supabase.com](https://supabase.com) and save the database password it
    asks you to define.
 2. Open the **SQL Editor**, paste all of [`backend/schema.sql`](backend/schema.sql) and run it.
@@ -87,10 +108,8 @@ Two details when filling in the password:
 - Percent-encode special characters, since the connection string is a URI: `@` becomes `%40`,
   `!` becomes `%21`, `#` becomes `%23`.
 
-To use a local PostgreSQL instead, create a database named `ecommerce`, run
-`psql -d ecommerce -f backend/schema.sql`, and set `DATABASE_URL` to
-`postgresql://postgres:postgres@localhost:5432/ecommerce`. SSL is enabled for remote hosts and
-skipped for localhost.
+SSL is enabled for remote hosts and skipped for localhost, so the same code works with either
+option.
 
 ### 2. Backend
 
@@ -112,7 +131,8 @@ npm install
 npm run dev
 ```
 
-Available at `http://localhost:3000`.
+Available at `http://localhost:3000`. It calls the backend at `http://localhost:3333` by
+default; set `NEXT_PUBLIC_API_URL` only if the backend runs somewhere else.
 
 ## Email confirmation
 
