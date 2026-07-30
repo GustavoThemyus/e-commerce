@@ -1,131 +1,126 @@
 # E-commerce Application (Frontend + Backend)
-  
-**This project is a full-stack e-commerce application developed as part of a technical challenge.**
-**The application simulates an online store with product listing, shopping cart management, and checkout flow, integrating a React/Next.js frontend with a Node.js + PostgreSQL backend.**
-**The focus of the project is clean architecture, API communication, state management, and persistence of data.**
 
+Full-stack online store built as a technical challenge: product listing, cart management and a
+checkout flow, with a Next.js frontend talking to a Node.js + PostgreSQL API.
 
 ## Features
 
 ### Frontend
 - Product listing with name, description, price and image
 - Individual product page
-- Shopping cart with:
-  - Add products
-  - Update quantities
-  - Remove items
-  - Item subtotal calculation
-- Total purchase value calculation
-- Checkout flow with email input and validation
-- Integration with backend API
+- Cart: add products, update quantities, remove items, per-item subtotal
+- Total purchase value
+- Checkout with email input and validation
 - Responsive layout
 
 ### Backend
-- RESTful API for e-commerce operations
-- Endpoints:
-  - `GET /api/product` – list all products
-  - `GET /api/product/:id` – get product details
-  - `POST /api/cart` – add items to cart (in-memory)
-  - `PUT /api/cart` – update cart items
-  - `POST /api/checkout` – finalize purchase
-- Purchase persistence in PostgreSQL database
-- Email confirmation sent on checkout (testing mode)
+- RESTful API
+- Purchase persistence in PostgreSQL
+- Confirmation email on checkout
 
-  
+## API
+
+| Method | Route | Description |
+| ------ | ----- | ----------- |
+| GET | `/api/product` | List all products |
+| GET | `/api/product/:id` | Product details |
+| GET | `/api/cart` | Current cart |
+| POST | `/api/cart` | Add item to cart |
+| PUT | `/api/cart` | Update item quantity |
+| DELETE | `/api/cart/:id` | Remove item from cart |
+| POST | `/api/checkout` | Finalize purchase |
+
+The cart is kept in memory in the backend, as allowed by the challenge. It has no table of its
+own and resets when the server restarts.
+
 ## Technologies
 
-### Frontend
-- Next.js (App Router)
-- React
-- Tailwind CSS
-- Context API
-- LocalStorage
+**Frontend:** Next.js (App Router), React, Tailwind CSS, Context API, LocalStorage
 
-### Backend
-- Node.js
-- Express
-- PostgreSQL
-- pg (node-postgres)
-- Resend (email service)
-- dotenv
+**Backend:** Node.js, Express, PostgreSQL (Supabase), pg, Resend, dotenv
 
+## Project structure
 
-## Project Structure
-
-### frontend/
-- src/
-- app/
-- components/
-- context/
-    
-### backend/
-- src/
-- controllers/
-- models/
-- routes/
-- services/
-- config/
-- server.js
-
+```
+backend/
+  schema.sql        tables and seed data
+  src/
+    config/         database connection
+    controllers/
+    models/
+    routes/
+    services/       email
+    server.js
+frontend/
+  src/
+    app/            routes, pages and components
+    context/        cart state
+```
 
 ## Database
-The project uses PostgreSQL as a relational database.
-Main tables:
-- `products` – stores available products
-- `sales` – stores completed purchases and cart snapshot
-- `cart` – temporary cart storage (optional, in-memory currently used)
 
-- Product ratings are stored using separate fields (`rating_rate` and `rating_count`) and formatted in the API response to match frontend expectations.
+PostgreSQL, hosted on Supabase. Two tables:
 
+- `products`: available products
+- `sales`: completed purchases, with the cart snapshot stored as `JSONB`
 
-## Email Confirmation
-The checkout process attempts to send a purchase confirmation email using the Resend service.
+Ratings are stored as two columns, `rating_rate` and `rating_count`, and nested into a `rating`
+object in the API response.
 
-Due to Resend testing limitations:
-- Emails can only be sent to the verified email address of the account owner
-- When sending to other emails, the purchase is still completed successfully
-- The API response informs whether the email was sent or skipped
+Schema and seed data (20 products): [`backend/schema.sql`](backend/schema.sql)
 
-This behavior is intentional and documented to comply with the challenge requirements while respecting the email provider constraints.
+## Running locally
 
+### 1. Database
 
-## Running the project locally
+1. Create a project at [supabase.com](https://supabase.com) and save the database password it
+   asks you to define.
+2. Open the **SQL Editor**, paste all of [`backend/schema.sql`](backend/schema.sql) and run it.
+   This creates both tables and inserts the products.
+3. Copy the connection string from **Project Settings > Database**. Use the **Session pooler**
+   URI on port `5432`, not the direct connection, which is IPv6-only on the free plan.
 
-### Backend
-1. Navigate to the backend folder:
-`cd backend`
+Two details when filling in the password:
 
-2. Install dependencies:
-`npm install`
+- Replace the whole `[YOUR-PASSWORD]` placeholder, square brackets included. Leaving them in
+  makes them part of the password and authentication fails.
+- Percent-encode special characters, since the connection string is a URI: `@` becomes `%40`,
+  `!` becomes `%21`, `#` becomes `%23`.
 
-3. Create a .env file in the backend root:
-`RESEND_API_KEY=re_5NMzJXPK_Cc9MtRQaGW7FnsjQCcfQ5L6V`
+To use a local PostgreSQL instead, create a database named `ecommerce`, run
+`psql -d ecommerce -f backend/schema.sql`, and set `DATABASE_URL` to
+`postgresql://postgres:postgres@localhost:5432/ecommerce`. SSL is enabled for remote hosts and
+skipped for localhost.
 
-4. Start the server:
-`node src/server.js`
+### 2. Backend
 
-Backend will run on:
-`http://localhost:3333`
+```bash
+cd backend
+npm install
+cp .env.example .env   # then fill in DATABASE_URL and RESEND_API_KEY
+node src/server.js
+```
 
-### Frontend
-1. Navigate to the frontend folder:
-`cd frontend`
+Runs on `http://localhost:3333`. Check it with `curl http://localhost:3333/api/product`, which
+should return the product list.
 
-2. Install dependencies:
-`npm install`
+### 3. Frontend
 
-3. Run the development server:
-`npm run dev`
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-Frontend will be available at:
-`http://localhost:3000`
+Available at `http://localhost:3000`.
 
+## Email confirmation
 
-## Notes
-- The cart is stored in memory for simplicity, as allowed by the challenge
-- The project prioritizes clarity, separation of concerns and clean code
-- The backend is ready to be extended with authentication, payment integration or persistent carts
+Checkout sends a confirmation email through Resend. On a Resend free account, emails only reach
+the account owner's verified address. Sending to any other address fails, but the purchase is
+still recorded and the API response reports whether the email went out.
 
+## Screenshots
 
 <p align="center">
   <img src="frontend/public/images/home.png" width="600" />
@@ -142,4 +137,3 @@ Frontend will be available at:
 <p align="center">
   <img src="frontend/public/images/about.png" width="600" />
 </p>
-
