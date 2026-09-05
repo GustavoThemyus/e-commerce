@@ -1,5 +1,9 @@
--- Schema e dados iniciais. Rode uma vez no SQL Editor do Supabase (ou via psql, se local).
+-- Schema e dados iniciais do e-commerce
+-- Rode este arquivo uma vez no banco (SQL Editor do Supabase, ou psql se for local).
 
+-- =====================================================
+-- Tabela de produtos
+-- =====================================================
 CREATE TABLE IF NOT EXISTS products (
   id           SERIAL PRIMARY KEY,
   title        TEXT           NOT NULL,
@@ -12,7 +16,10 @@ CREATE TABLE IF NOT EXISTS products (
   created_at   TIMESTAMPTZ    NOT NULL DEFAULT NOW()
 );
 
--- Uma linha por compra; items guarda o snapshot do carrinho
+-- =====================================================
+-- Tabela de vendas (uma linha por compra finalizada)
+-- items guarda o snapshot do carrinho no momento da compra
+-- =====================================================
 CREATE TABLE IF NOT EXISTS sales (
   id             SERIAL PRIMARY KEY,
   customer_email TEXT           NOT NULL,
@@ -21,7 +28,10 @@ CREATE TABLE IF NOT EXISTS sales (
   created_at     TIMESTAMPTZ    NOT NULL DEFAULT NOW()
 );
 
--- Ids explicitos porque o frontend linka /product/:id
+-- =====================================================
+-- Produtos iniciais
+-- Os ids sao explicitos porque o frontend linka /product/:id
+-- =====================================================
 INSERT INTO products (id, title, price, description, category, image, rating_rate, rating_count)
 VALUES
   (1, 'Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops', 109.95, 'Your perfect pack for everyday use and walks in the forest. Stash your laptop (up to 15 inches) in the padded sleeve, your everyday', 'men''s clothing', 'https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_t.png', 3.9, 120),
@@ -46,5 +56,6 @@ VALUES
   (20, 'DANVOUY Womens T Shirt Casual Cotton Short', 12.99, '95%Cotton,5%Spandex, Features: Casual, Short Sleeve, Letter Print,V-Neck,Fashion Tees, The fabric is soft and has some stretch., Occasion: Casual/Office/Beach/School/Home/Street. Season: Spring,Summer,Autumn,Winter.', 'women''s clothing', 'https://fakestoreapi.com/img/61pHAEJ4NML._AC_UX679_t.png', 3.6, 145)
 ON CONFLICT (id) DO NOTHING;
 
--- Realinha a sequencia do SERIAL: sem isso o proximo insert sem id tentaria usar id = 1
+-- Realinha a sequencia do SERIAL apos os inserts com id explicito,
+-- senao o proximo INSERT sem id tentaria usar id = 1 e falharia.
 SELECT setval(pg_get_serial_sequence('products', 'id'), (SELECT MAX(id) FROM products));
