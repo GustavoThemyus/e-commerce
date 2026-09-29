@@ -144,6 +144,10 @@ Checkout sends a confirmation email through Resend. On a Resend free account, em
 the account owner's verified address. Sending to any other address fails, but the purchase is
 still recorded and the API response reports whether the email went out.
 
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
 ## Screenshots
 
 <p align="center">

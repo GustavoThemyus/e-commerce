@@ -9,7 +9,7 @@ export function CartProvider({ children }) {
 
   // Carrinho sempre começa vazio no servidor pra evitar erro de hydration
   const [cart, setCart] = useState([]);
-
+  
   // Carrega o carrinho do localStorage DEPOIS que o componente hidratou no cliente
   useEffect(() => {
     if (typeof window !== "undefined") {
