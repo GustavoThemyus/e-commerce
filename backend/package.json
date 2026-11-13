@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "node --test src",
+    "test:coverage": "node --test --experimental-test-coverage src",
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
     "grant-role": "node scripts/grant-role.js",

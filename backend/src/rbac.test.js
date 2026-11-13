@@ -169,3 +169,37 @@ test("checkout com token inválido retorna 401 em vez de virar convidado", async
     .send({ customer_email: guestEmail, items: [{ productId: 1, quantity: 1 }] });
   assert.strictEqual(res.status, 401);
 });
+
+test("PUT /product/:id com id que não é inteiro positivo retorna 404 para o admin", async () => {
+  for (const id of ["abc", "0", "-3", "1.5"]) {
+    const res = await request(app)
+      .put(`/api/product/${id}`)
+      .set(bearer(admin))
+      .send(newProduct);
+    assert.strictEqual(res.status, 404, id);
+  }
+});
+
+test("POST /product com campos opcionais inválidos retorna 400", async () => {
+  for (const extra of [{ image: "não-é-url" }, { image: "ftp://x.test/a.png" }, { description: 5 }]) {
+    const res = await request(app)
+      .post("/api/product")
+      .set(bearer(admin))
+      .send({ ...newProduct, ...extra });
+    assert.strictEqual(res.status, 400, JSON.stringify(extra));
+  }
+});
+
+test("POST /product só com título e preço grava os opcionais como nulos", async () => {
+  const res = await request(app)
+    .post("/api/product")
+    .set(bearer(admin))
+    .send({ title: "Mínimo", price: 5 });
+  assert.strictEqual(res.status, 201);
+  createdProductIds.push(res.body.id);
+
+  assert.strictEqual(res.body.description, null);
+  assert.strictEqual(res.body.category, null);
+  assert.strictEqual(res.body.image, null);
+  assert.deepStrictEqual(res.body.rating, { rate: 0, count: 0 });
+});

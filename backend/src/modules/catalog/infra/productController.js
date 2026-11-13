@@ -1,5 +1,14 @@
 import { AppError } from "../../../shared/errors/AppError.js";
 
+// Id que não é inteiro positivo nunca existe: 404, em vez de deixar o Postgres rejeitar o cast
+function parseId(param) {
+  const id = Number(param);
+  if (!Number.isInteger(id) || id < 1) {
+    throw new AppError(404, "Product not found");
+  }
+  return id;
+}
+
 // Só campos editáveis: id, rating e created_at não entram pelo corpo da requisição
 function editableFields(body) {
   const { title, price, description, category, image } = body;
@@ -24,7 +33,7 @@ export function createProductController({
     },
 
     async get(req, res) {
-      res.json(await getProduct(req.params.id));
+      res.json(await getProduct(parseId(req.params.id)));
     },
 
     async create(req, res) {
@@ -32,12 +41,9 @@ export function createProductController({
     },
 
     async update(req, res) {
-      const id = Number(req.params.id);
-      if (!Number.isInteger(id) || id < 1) {
-        throw new AppError(404, "Product not found");
-      }
-
-      res.json(await updateProduct(id, editableFields(req.body)));
+      res.json(
+        await updateProduct(parseId(req.params.id), editableFields(req.body)),
+      );
     },
   };
 }

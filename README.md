@@ -41,6 +41,10 @@ checkout flow, with a Next.js frontend talking to a Node.js + PostgreSQL API.
 The cart is kept in memory in the backend, as allowed by the challenge. It has no table of its
 own and resets when the server restarts.
 
+Errors are JSON, `{ "error": "message" }`: `400` invalid input (including cart payloads), `401`
+missing or invalid token, `403` missing permission, `404` unknown product or an id that is not a
+positive integer, `409` email already registered, `429` too many login attempts.
+
 ## Access control
 
 Permission-based (RBAC): users have roles, roles have permissions, and routes check the
@@ -122,6 +126,7 @@ backend/
     shared/         database pool, AppError, error handler, validation, permission names
     app.js          composition root: builds the modules and mounts the routes
     server.js
+    *.test.js       HTTP tests in src/, unit tests next to the code they cover
 frontend/
   src/
     app/            routes, pages and components
@@ -226,6 +231,31 @@ npm run dev
 
 Available at `http://localhost:3000`. It calls the backend at `http://localhost:3333` by
 default; set `NEXT_PUBLIC_API_URL` only if the backend runs somewhere else.
+
+## Tests
+
+```bash
+cd backend
+npm test                # run everything
+npm run test:coverage   # same, with the coverage table
+```
+
+They need the database up (`docker compose up -d`, wait for `healthy`) and `backend/.env` with
+`DATABASE_URL` and `JWT_SECRET`. Node's built-in runner and `supertest`, no extra tooling.
+
+- HTTP tests call the real app against the real database: every endpoint is covered for success,
+  validation errors, missing token and missing permission.
+- Unit tests use fakes for what the routes cannot reach: the checkout use case, the permission
+  middleware, the JWT service, the order transaction (commit and rollback), the Resend gateway
+  (`fetch` is replaced, so no email is sent) and the `DATABASE_URL` checks.
+- Tests that create users or products remove them afterwards.
+- Source coverage is 100% of lines, branches and functions. `src/server.js` is the one file not
+  measured, since no test imports it. Node 20 has no option to leave test files out of its own
+  report, so the "all files" row it prints also counts them.
+- There are no frontend tests.
+
+`src/checkout.test.js` (the first test written) inserts a row in `sales` on every run and is not
+cleaned up. With `RESEND_API_KEY` set it also sends a real email to the address it uses.
 
 ## Email confirmation
 
