@@ -33,6 +33,8 @@ checkout flow, with a Next.js frontend talking to a Node.js + PostgreSQL API.
 | POST | `/api/auth/login` | Returns a JWT and the user's permissions (rate limited) |
 | GET | `/api/auth/me` | Current user and permissions |
 | GET | `/api/orders` | Own orders, or all orders with `order:read:any` |
+| GET | `/api/product/:id/recommendations` | "Customers also bought" (optional `?limit=1..20`, default 4) |
+| GET | `/api/recommendations` | Recommendations for the logged in user (default 8) |
 | POST | `/api/product` | Create a product (`product:write`) |
 | PUT | `/api/product/:id` | Edit a product (`product:write`) |
 
@@ -62,6 +64,36 @@ cd backend
 npm run grant-role -- user@email.com admin
 ```
 
+## Recommendations
+
+Item-item collaborative filtering, the same idea behind "people who watched this also watched".
+The domain logic is pure and lives in
+[`itemCollaborativeFiltering.js`](backend/src/modules/recommendation/domain/itemCollaborativeFiltering.js).
+
+- Input: one basket per buyer (the products they bought). The signal is implicit and binary,
+  bought or not bought, quantity does not weigh in.
+- Similarity between two products is the cosine between their buyer vectors:
+  `common buyers / sqrt(buyers of A * buyers of B)`, from 0 to 1.
+- Product page: the products most similar to it.
+  Logged in user: for each candidate, the sum of its similarity to everything the user already
+  owns, never recommending what they own.
+- Cold start: when the history is not enough (new product, new account, empty store), the list is
+  completed with the top rated products. Each item carries `recommendation.reason`
+  (`also-bought` or `top-rated`) and a `score`, so the UI never labels a fallback as a
+  collaborative result.
+- The buyer is identified by email (a logged in purchase uses the account's email).
+
+The model is rebuilt from `sale_items` on every request, which is fine for a small store. With
+real volume it should be precomputed (a job that stores the top neighbours of each product).
+
+A fresh store has no purchases, so generate some:
+
+```bash
+cd backend
+npm run seed:demo             # 60 synthetic purchases in 4 taste profiles (deterministic)
+npm run seed:demo -- --clear  # remove them
+```
+
 ## Technologies
 
 **Frontend:** Next.js (App Router), React, Tailwind CSS, Context API, LocalStorage
@@ -74,14 +106,15 @@ npm run grant-role -- user@email.com admin
 docker-compose.yml  local postgres for development
 backend/
   schema.sql        tables and seed data
-  migrations/       incremental SQL (001_rbac.sql: users, roles, permissions)
-  scripts/          grant-role.js
+  migrations/       incremental SQL (001_rbac.sql, 002_sale_items.sql)
+  scripts/          grant-role.js, seed-demo-data.js
   src/
     modules/        one folder per bounded context
       catalog/      products
       cart/         in-memory cart
       ordering/     checkout and orders
       identity/     sign up, login, JWT, permission middleware
+      recommendation/  collaborative filtering over the purchase history
         domain/       rules, no framework or database
         application/  use cases
         infra/        routes, controllers, repositories, adapters (pg, bcrypt, Resend)
@@ -103,13 +136,16 @@ PostgreSQL, hosted on Supabase. Tables:
 - `products`: available products
 - `sales`: completed purchases, with the cart snapshot stored as `JSONB` and the buyer in
   `user_id` (null for guests)
+- `sale_items`: one row per product in each purchase (`sale_id`, `product_id`, `quantity`), the
+  input of the recommendations. `sales.items` stays as the title and price snapshot
 - `users`, `roles`, `permissions`, `role_permissions`, `user_roles`: access control
 
 Ratings are stored as two columns, `rating_rate` and `rating_count`, and nested into a `rating`
 object in the API response.
 
 Schema and seed data (20 products): [`backend/schema.sql`](backend/schema.sql). Access control
-tables: [`backend/migrations/001_rbac.sql`](backend/migrations/001_rbac.sql).
+tables: [`backend/migrations/001_rbac.sql`](backend/migrations/001_rbac.sql). Purchase items (with a
+backfill of existing purchases): [`backend/migrations/002_sale_items.sql`](backend/migrations/002_sale_items.sql).
 
 ## Running locally
 
@@ -123,9 +159,9 @@ Pick either option. Docker is faster and needs no account.
 docker compose up -d
 ```
 
-Starts PostgreSQL on port 5432 and applies [`backend/schema.sql`](backend/schema.sql) and
-[`backend/migrations/001_rbac.sql`](backend/migrations/001_rbac.sql) automatically on the first
-run, creating the tables and inserting the products. This is the
+Starts PostgreSQL on port 5432 and applies [`backend/schema.sql`](backend/schema.sql) and the
+files in [`backend/migrations/`](backend/migrations) automatically on the first run, creating the
+tables and inserting the products. This is the
 value `.env.example` already ships with, so no editing is needed:
 
 ```
@@ -137,11 +173,12 @@ The command returns before the database has finished initializing. Wait for
 
 To wipe it and start from a clean database, run `docker compose down -v` and bring it up again.
 
-If the database already existed before the access control tables, apply the migration to it
-(it is safe to run more than once):
+If the database already existed before a migration, apply the new files to it in order (they are
+safe to run more than once):
 
 ```bash
 docker exec -i ecommerce-db psql -U postgres -d ecommerce < backend/migrations/001_rbac.sql
+docker exec -i ecommerce-db psql -U postgres -d ecommerce < backend/migrations/002_sale_items.sql
 ```
 
 **Option B: Supabase**
@@ -149,7 +186,7 @@ docker exec -i ecommerce-db psql -U postgres -d ecommerce < backend/migrations/0
 1. Create a project at [supabase.com](https://supabase.com) and save the database password it
    asks you to define.
 2. Open the **SQL Editor**, paste all of [`backend/schema.sql`](backend/schema.sql) and run it,
-   then do the same with [`backend/migrations/001_rbac.sql`](backend/migrations/001_rbac.sql).
+   then do the same with each file in [`backend/migrations/`](backend/migrations), in order.
    This creates the tables and inserts the products and the roles.
 3. Copy the connection string from **Project Settings > Database**. Use the **Session pooler**
    URI on port `5432`, not the direct connection, which is IPv6-only on the free plan.

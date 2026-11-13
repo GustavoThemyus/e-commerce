@@ -19,6 +19,18 @@ export class Order {
     return new Order({ customerEmail, userId, items });
   }
 
+  // Mesmo produto em linhas diferentes soma a quantidade (uma linha por produto no banco)
+  get quantityByProduct() {
+    const quantities = new Map();
+    for (const item of this.items) {
+      quantities.set(
+        item.productId,
+        (quantities.get(item.productId) ?? 0) + item.quantity,
+      );
+    }
+    return quantities;
+  }
+
   // Soma em centavos para não acumular erro de ponto flutuante (109.95 * 3)
   get total() {
     const cents = this.items.reduce(

@@ -13,6 +13,7 @@ services:
       # Rodam só na primeira subida, enquanto o volume está vazio, em ordem alfabética
       - ./backend/schema.sql:/docker-entrypoint-initdb.d/001_schema.sql:ro
       - ./backend/migrations/001_rbac.sql:/docker-entrypoint-initdb.d/002_rbac.sql:ro
+      - ./backend/migrations/002_sale_items.sql:/docker-entrypoint-initdb.d/003_sale_items.sql:ro
       - pgdata:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d ecommerce"]

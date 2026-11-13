@@ -10,6 +10,7 @@ import { createIdentityModule } from "./modules/identity/index.js";
 import { createCatalogModule } from "./modules/catalog/index.js";
 import { createCartModule } from "./modules/cart/index.js";
 import { createOrderingModule } from "./modules/ordering/index.js";
+import { createRecommendationModule } from "./modules/recommendation/index.js";
 
 // Composition root: é aqui que os módulos recebem suas dependências
 const identity = createIdentityModule({ pool, jwtSecret: process.env.JWT_SECRET });
@@ -22,6 +23,12 @@ const ordering = createOrderingModule({
   clearCart: cart.cartService.clear,
 });
 
+const recommendation = createRecommendationModule({
+  pool,
+  auth: identity.auth,
+  productCatalog: catalog.productCatalog,
+});
+
 const app = express();
 
 app.use(helmet());
@@ -32,6 +39,7 @@ app.use("/api", identity.router);
 app.use("/api", catalog.router);
 app.use("/api", cart.router);
 app.use("/api", ordering.router);
+app.use("/api", recommendation.router);
 
 app.use(errorHandler);
 

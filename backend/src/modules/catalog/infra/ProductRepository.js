@@ -20,6 +20,17 @@ export function createProductRepository(pool) {
       return result.rows;
     },
 
+    async findTopRated(limit, excludeIds = []) {
+      const result = await pool.query(
+        `SELECT * FROM products
+         WHERE NOT (id = ANY($2::int[]))
+         ORDER BY rating_rate DESC, rating_count DESC, id
+         LIMIT $1`,
+        [limit, excludeIds],
+      );
+      return result.rows;
+    },
+
     async create({ title, price, description, category, image }) {
       const result = await pool.query(
         `INSERT INTO products (title, price, description, category, image)

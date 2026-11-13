@@ -1,5 +1,6 @@
 import ProductList from "./components/ProductList";
 import BackButton from "./components/BackButton";
+import RecommendedForYou from "./components/RecommendedForYou";
 import { API_URL } from "@/lib/api";
 
 export const dynamic = "force-dynamic";
@@ -61,7 +62,10 @@ export default async function Home() {
           </div>
         ) : (
           // Se tudo deu certo, mostra os produtos
-          <ProductList products={products} />
+          <>
+            <RecommendedForYou />
+            <ProductList products={products} />
+          </>
         )}
       </div>
     </main>

@@ -4,8 +4,9 @@ import ProductImage from "./components/ProductImage";
 import ProductInfo from "./components/ProductInfo";
 import ProductActions from "./components/ProductActions";
 import BackButton from "@/app/components/BackButton";
+import RecommendationList from "@/app/components/RecommendationList";
 
-export default function ProductPageClient({ product }) {
+export default function ProductPageClient({ product, recommendations = [] }) {
   if (!product) {
     return <div className="p-8 text-center">Loading...</div>;
   }
@@ -28,6 +29,14 @@ export default function ProductPageClient({ product }) {
           />
           <ProductActions product={product} />
         </div>
+
+        <RecommendationList
+          products={recommendations}
+          titles={{
+            "also-bought": "Customers also bought",
+            "top-rated": "Top rated",
+          }}
+        />
       </div>
     </main>
   );

@@ -30,6 +30,19 @@ async function fetchProduct(id) {
   return JSON.parse(text);
 }
 
+// Recomendação é um extra: se a API falhar, a página do produto abre sem ela
+async function fetchRecommendations(id) {
+  try {
+    const response = await fetch(`${API_URL}/api/product/${id}/recommendations`, {
+      headers: { Accept: "application/json" },
+      cache: "no-store",
+    });
+    return response.ok ? await response.json() : [];
+  } catch {
+    return [];
+  }
+}
+
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;
   const { id } = resolvedParams;
@@ -55,7 +68,10 @@ export default async function ProductPage({ params }) {
 
   try {
     const product = await fetchProduct(id);
-    return <ProductPageClient product={product} />;
+    const recommendations = await fetchRecommendations(product.id);
+    return (
+      <ProductPageClient product={product} recommendations={recommendations} />
+    );
   } catch (err) {
     if (err.message === "NOT_FOUND") {
       notFound();

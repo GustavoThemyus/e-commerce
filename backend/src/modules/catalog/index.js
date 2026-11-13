@@ -20,10 +20,14 @@ export function createCatalogModule({ pool, auth }) {
   return {
     router: createProductRoutes(controller, auth),
 
-    // Consulta que outros contextos (pedidos) usam para ler preços reais
+    // Consultas que outros contextos (pedidos, recomendação) usam para ler produtos
     productCatalog: {
       async findByIds(ids) {
         return (await productRepository.findByIds(ids)).map(toProduct);
+      },
+
+      async findTopRated(limit, excludeIds) {
+        return (await productRepository.findTopRated(limit, excludeIds)).map(toProduct);
       },
     },
   };
