@@ -1,10 +1,12 @@
 // Total, botão finalizar, botão continuar
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Link from "next/link";
 import { CheckCircle, Ban, CircleX } from "lucide-react";
 import { API_URL } from "@/lib/api";
+import { AuthContext } from "@/context/AuthContext";
 
 export function CartSummary({ products }) {
+  const { user, token, logout } = useContext(AuthContext);
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [email, setEmail] = useState("");
@@ -32,12 +34,13 @@ export function CartSummary({ products }) {
     setErrorMessage("");
     setShowSuccess(false);
 
-    if (!email) {
+    // Logado: o backend usa o e-mail da conta
+    if (!user && !email) {
       setEmailError("Email is required.");
       return;
     }
 
-    if (!isValidEmail(email)) {
+    if (!user && !isValidEmail(email)) {
       setEmailError("Please, enter a valid email address.");
       return;
     }
@@ -57,14 +60,23 @@ export function CartSummary({ products }) {
         total: total,
         totalItems: totalItems,
         date: new Date().toISOString(),
-        customer_email: email,
+        customer_email: user ? user.email : email,
       };
 
       const response = await fetch(`${API_URL}/api/checkout`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(token && { Authorization: `Bearer ${token}` }),
+        },
         body: JSON.stringify(orderData),
       });
+
+      if (response.status === 401 && token) {
+        // Sessão expirou: sai da conta e deixa comprar como convidado
+        logout();
+        throw new Error("Session expired");
+      }
 
       if (!response.ok) {
         const data = await response.json().catch(() => ({}));
@@ -117,6 +129,11 @@ export function CartSummary({ products }) {
         </div>
       </div>
 
+      {user ? (
+        <p className="text-sm">
+          Purchasing as <strong>{user.email}</strong>
+        </p>
+      ) : (
       <div className="flex flex-col gap-2">
         <label className="text-sm font-medium">
           Fill in one with a (real) valid email address
@@ -138,6 +155,7 @@ export function CartSummary({ products }) {
           required
         />
       </div>
+      )}
 
       {/* Botões */}
       <div>

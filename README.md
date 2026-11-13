@@ -28,16 +28,45 @@ checkout flow, with a Next.js frontend talking to a Node.js + PostgreSQL API.
 | POST | `/api/cart` | Add item to cart |
 | PUT | `/api/cart` | Update item quantity |
 | DELETE | `/api/cart/:id` | Remove item from cart |
-| POST | `/api/checkout` | Finalize purchase |
+| POST | `/api/checkout` | Finalize purchase (guest with `customer_email`, or logged in) |
+| POST | `/api/auth/register` | Create an account (role `customer`) |
+| POST | `/api/auth/login` | Returns a JWT and the user's permissions (rate limited) |
+| GET | `/api/auth/me` | Current user and permissions |
+| GET | `/api/orders` | Own orders, or all orders with `order:read:any` |
+| POST | `/api/product` | Create a product (`product:write`) |
+| PUT | `/api/product/:id` | Edit a product (`product:write`) |
 
 The cart is kept in memory in the backend, as allowed by the challenge. It has no table of its
 own and resets when the server restarts.
+
+## Access control
+
+Permission-based (RBAC): users have roles, roles have permissions, and routes check the
+permission, never the role name.
+
+| Role | Permissions |
+| ---- | ----------- |
+| `customer` (default on sign up) | `order:read:own` |
+| `admin` | `product:write`, `order:read:any`, `order:read:own` |
+
+- Login returns a JWT (HS256, 1 hour). It only carries the user id: permissions are read from
+  the database on every request, so revoking a role takes effect immediately.
+- Checkout works as a guest or logged in. A logged-in purchase uses the account's email and is
+  linked to the user. An invalid token is a `401`, it is not treated as a guest.
+- Prices and titles are always read from the `products` table at checkout. The client only
+  chooses the product and the quantity.
+- The public sign up never creates admins. Promote an existing account with:
+
+```bash
+cd backend
+npm run grant-role -- user@email.com admin
+```
 
 ## Technologies
 
 **Frontend:** Next.js (App Router), React, Tailwind CSS, Context API, LocalStorage
 
-**Backend:** Node.js, Express, PostgreSQL (Supabase), pg, Resend, dotenv
+**Backend:** Node.js, Express, PostgreSQL (Supabase), pg, JWT, bcrypt, Resend, dotenv
 
 ## Project structure
 
@@ -45,31 +74,42 @@ own and resets when the server restarts.
 docker-compose.yml  local postgres for development
 backend/
   schema.sql        tables and seed data
+  migrations/       incremental SQL (001_rbac.sql: users, roles, permissions)
+  scripts/          grant-role.js
   src/
-    config/         database connection
-    controllers/
-    models/
-    routes/
-    services/       email
+    modules/        one folder per bounded context
+      catalog/      products
+      cart/         in-memory cart
+      ordering/     checkout and orders
+      identity/     sign up, login, JWT, permission middleware
+        domain/       rules, no framework or database
+        application/  use cases
+        infra/        routes, controllers, repositories, adapters (pg, bcrypt, Resend)
+        index.js      wires the module
+    shared/         database pool, AppError, error handler, validation, permission names
+    app.js          composition root: builds the modules and mounts the routes
     server.js
 frontend/
   src/
     app/            routes, pages and components
-    context/        cart state
+    context/        cart and auth state
     lib/            api base url
 ```
 
 ## Database
 
-PostgreSQL, hosted on Supabase. Two tables:
+PostgreSQL, hosted on Supabase. Tables:
 
 - `products`: available products
-- `sales`: completed purchases, with the cart snapshot stored as `JSONB`
+- `sales`: completed purchases, with the cart snapshot stored as `JSONB` and the buyer in
+  `user_id` (null for guests)
+- `users`, `roles`, `permissions`, `role_permissions`, `user_roles`: access control
 
 Ratings are stored as two columns, `rating_rate` and `rating_count`, and nested into a `rating`
 object in the API response.
 
-Schema and seed data (20 products): [`backend/schema.sql`](backend/schema.sql)
+Schema and seed data (20 products): [`backend/schema.sql`](backend/schema.sql). Access control
+tables: [`backend/migrations/001_rbac.sql`](backend/migrations/001_rbac.sql).
 
 ## Running locally
 
@@ -83,8 +123,9 @@ Pick either option. Docker is faster and needs no account.
 docker compose up -d
 ```
 
-Starts PostgreSQL on port 5432 and applies [`backend/schema.sql`](backend/schema.sql)
-automatically on the first run, creating both tables and inserting the products. This is the
+Starts PostgreSQL on port 5432 and applies [`backend/schema.sql`](backend/schema.sql) and
+[`backend/migrations/001_rbac.sql`](backend/migrations/001_rbac.sql) automatically on the first
+run, creating the tables and inserting the products. This is the
 value `.env.example` already ships with, so no editing is needed:
 
 ```
@@ -96,12 +137,20 @@ The command returns before the database has finished initializing. Wait for
 
 To wipe it and start from a clean database, run `docker compose down -v` and bring it up again.
 
+If the database already existed before the access control tables, apply the migration to it
+(it is safe to run more than once):
+
+```bash
+docker exec -i ecommerce-db psql -U postgres -d ecommerce < backend/migrations/001_rbac.sql
+```
+
 **Option B: Supabase**
 
 1. Create a project at [supabase.com](https://supabase.com) and save the database password it
    asks you to define.
-2. Open the **SQL Editor**, paste all of [`backend/schema.sql`](backend/schema.sql) and run it.
-   This creates both tables and inserts the products.
+2. Open the **SQL Editor**, paste all of [`backend/schema.sql`](backend/schema.sql) and run it,
+   then do the same with [`backend/migrations/001_rbac.sql`](backend/migrations/001_rbac.sql).
+   This creates the tables and inserts the products and the roles.
 3. Copy the connection string from **Project Settings > Database**. Use the **Session pooler**
    URI on port `5432`, not the direct connection, which is IPv6-only on the free plan.
 
@@ -120,9 +169,12 @@ option.
 ```bash
 cd backend
 npm install
-cp .env.example .env   # then fill in DATABASE_URL and RESEND_API_KEY
+cp .env.example .env   # then fill in DATABASE_URL, JWT_SECRET and RESEND_API_KEY
 node src/server.js
 ```
+
+`JWT_SECRET` is required, the server refuses to start without it. Generate one with
+`node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"`.
 
 Runs on `http://localhost:3333`. Check it with `curl http://localhost:3333/api/product`, which
 should return the product list.

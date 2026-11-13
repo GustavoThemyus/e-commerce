@@ -4,9 +4,11 @@ import { Github, Linkedin } from "lucide-react";
 import { SiWhatsapp } from "react-icons/si";
 import { useContext } from "react";
 import { CartContext } from "@/context/CartContext";
+import { AuthContext } from "@/context/AuthContext";
 
 export default function Header() {
   const { cart, isHydrated } = useContext(CartContext);
+  const { user, isHydrated: authReady, logout } = useContext(AuthContext);
 
   return (
     <header className="text-black border-b">
@@ -40,6 +42,22 @@ export default function Header() {
                 <li className="hover:underline">
                   <Link href="/about">ABOUT</Link>
                 </li>
+                {authReady &&
+                  (user ? (
+                    <li className="hover:underline">
+                      <button
+                        onClick={logout}
+                        className="hover:cursor-pointer"
+                        title={user.email}
+                      >
+                        LOGOUT
+                      </button>
+                    </li>
+                  ) : (
+                    <li className="hover:underline">
+                      <Link href="/login">LOGIN</Link>
+                    </li>
+                  ))}
               </ul>
             </nav>
           </div>

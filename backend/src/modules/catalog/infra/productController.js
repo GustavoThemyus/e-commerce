@@ -1,55 +1,43 @@
-import { getAllProducts, getProductById } from "../models/productModel.js";
+import { AppError } from "../../../shared/errors/AppError.js";
 
-export async function listProducts(req, res) {
-  try {
-    const products = await getAllProducts();
-
-    const formattedProducts = products.map((product) => ({
-      id: product.id,
-      title: product.title,
-      price: Number(product.price),
-      description: product.description,
-      category: product.category,
-      image: product.image,
-      rating: {
-        rate: Number(product.rating_rate),
-        count: product.rating_count,
-      },
-      created_at: product.created_at,
-    }));
-
-    res.json(formattedProducts);
-  } catch (error) {
-    console.error("Failed to fetch products:", error);
-    res.status(500).json({ error: "Failed to fetch products" });
-  }
+// Só campos editáveis: id, rating e created_at não entram pelo corpo da requisição
+function editableFields(body) {
+  const { title, price, description, category, image } = body;
+  return {
+    title,
+    price,
+    description: description ?? null,
+    category: category ?? null,
+    image: image ?? null,
+  };
 }
 
-export async function getProduct(req, res) {
-  try {
-    const product = await getProductById(req.params.id);
+export function createProductController({
+  listProducts,
+  getProduct,
+  createProduct,
+  updateProduct,
+}) {
+  return {
+    async list(req, res) {
+      res.json(await listProducts());
+    },
 
-    if (!product) {
-      return res.status(404).json({ error: "Product not found " });
-    }
+    async get(req, res) {
+      res.json(await getProduct(req.params.id));
+    },
 
-    const formattedProduct = {
-      id: product.id,
-      title: product.title,
-      price: Number(product.price),
-      description: product.description,
-      category: product.category,
-      image: product.image,
-      rating: {
-        rate: Number(product.rating_rate),
-        count: product.rating_count,
-      },
-      created_at: product.created_at,
-    };
+    async create(req, res) {
+      res.status(201).json(await createProduct(editableFields(req.body)));
+    },
 
-    res.json(formattedProduct);
-  } catch (error) {
-    console.error("Failed to fetch product:", error);
-    res.status(500).json({ error: "Failed to fetch product" });
-  }
+    async update(req, res) {
+      const id = Number(req.params.id);
+      if (!Number.isInteger(id) || id < 1) {
+        throw new AppError(404, "Product not found");
+      }
+
+      res.json(await updateProduct(id, editableFields(req.body)));
+    },
+  };
 }

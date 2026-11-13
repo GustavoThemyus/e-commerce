@@ -1,8 +1,21 @@
 import { Router } from "express";
-import { checkout } from "../controllers/checkoutController.js";
+import { PERMISSIONS } from "../../../shared/permissions.js";
 
-const router = Router();
+export function createCheckoutRoutes(
+  controller,
+  { authenticate, optionalAuthenticate, requirePermission },
+) {
+  const router = Router();
 
-router.post("/checkout", checkout);
+  // Aceita convidado (só e-mail) e usuário logado
+  router.post("/checkout", optionalAuthenticate, controller.create);
 
-export default router;
+  router.get(
+    "/orders",
+    authenticate,
+    requirePermission(PERMISSIONS.ORDER_READ_ANY, PERMISSIONS.ORDER_READ_OWN),
+    controller.list,
+  );
+
+  return router;
+}
