@@ -26,6 +26,10 @@ function createRandom(seed) {
 }
 
 try {
+  // Mostra o banco alvo (só o host, nunca a senha): o mesmo comando serve para o banco local e
+  // para o de produção, e o que muda é a DATABASE_URL do ambiente
+  console.log(`Banco: ${new URL(process.env.DATABASE_URL).host}`);
+
   // sale_items sai junto, por ON DELETE CASCADE
   const removed = await pool.query("DELETE FROM sales WHERE customer_email LIKE $1", [
     `%${DEMO_DOMAIN}`,
