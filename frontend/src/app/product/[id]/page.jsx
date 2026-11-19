@@ -21,6 +21,16 @@ async function fetchProduct(id) {
     }
   );
 
+  // O backend responde 404 com {"error": "..."}: sem esta checagem esse JSON seria tratado como
+  // um produto e a página quebraria com 500 em vez de mostrar "Product not found"
+  if (response.status === 404) {
+    throw new Error("NOT_FOUND");
+  }
+
+  if (!response.ok) {
+    throw new Error(`Product request failed with HTTP ${response.status}`);
+  }
+
   const text = await response.text();
 
   if (!text) {
