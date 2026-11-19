@@ -1,7 +1,21 @@
 # E-commerce Application (Frontend + Backend)
 
-Full-stack online store built as a technical challenge: product listing, cart management and a
-checkout flow, with a Next.js frontend talking to a Node.js + PostgreSQL API.
+Full-stack online store that started as a technical challenge (product listing, cart and checkout)
+and grew into a deployed project with accounts, permission-based access control, collaborative
+filtering recommendations and an automated test suite. Next.js frontend, Node.js + Express API and
+PostgreSQL.
+
+## Live demo
+
+**https://e-commerce-self-eight-74.vercel.app**
+
+The frontend runs on Vercel, the API on Render and the database on Supabase, all on free tiers.
+The API sleeps when idle, so the first request after a pause can take about a minute. Sign up to
+try accounts, checkout and recommendations, and use a throwaway email: the demo stores what you
+type. Purchase confirmation emails go out through Resend's test sender, so they are only
+delivered to the project owner.
+
+API: `https://e-commerce-wuzc.onrender.com` (try `/health` or `/api/product`).
 
 ## Features
 
@@ -10,13 +24,22 @@ checkout flow, with a Next.js frontend talking to a Node.js + PostgreSQL API.
 - Individual product page
 - Cart: add products, update quantities, remove items, per-item subtotal
 - Total purchase value
-- Checkout with email input and validation
-- Responsive layout
+- Checkout with email input and validation, or as a logged in user
+- Sign up and log in
+- Recommendations: "Customers also bought" on the product page, "Recommended for you" on the home
+- Demo notice at checkout, and the real reason shown when a purchase fails
+- About page with a comments section (a mock, kept in your browser)
+- Responsive layout, keyboard focus ring and the current page highlighted in the menu
 
 ### Backend
 - RESTful API
 - Purchase persistence in PostgreSQL
 - Confirmation email on checkout
+- Accounts with JWT and permission-based access control (customer and admin roles)
+- Item-based collaborative filtering for recommendations
+- Security basics: `helmet`, CORS limited to the frontend origin, rate limits on login, sign up and
+  checkout, input validation, and a `/health` check
+- Automated tests (HTTP and unit) with full source coverage
 
 ## API
 
@@ -104,9 +127,15 @@ npm run seed:demo -- --clear  # remove them
 
 ## Technologies
 
-**Frontend:** Next.js (App Router), React, Tailwind CSS, Context API, LocalStorage
+**Frontend:** Next.js (App Router), React, Tailwind CSS, Context API, LocalStorage, lucide-react
 
-**Backend:** Node.js, Express, PostgreSQL (Supabase), pg, JWT, bcrypt, Resend, dotenv
+**Backend:** Node.js, Express, PostgreSQL (Supabase), pg, JWT, bcrypt, express-validator, helmet,
+express-rate-limit, Resend, dotenv
+
+**Tests:** Node's built-in runner (`node:test`) and `supertest`
+
+**Infrastructure:** Docker Compose (local database), Vercel (frontend), Render (backend), Supabase
+(database)
 
 ## Project structure
 
@@ -118,25 +147,25 @@ backend/
   scripts/          grant-role.js, seed-demo-data.js
   src/
     modules/        one folder per bounded context
-      catalog/      products
-      cart/         in-memory cart
-      ordering/     checkout and orders
-      identity/     sign up, login, JWT, permission middleware
-      recommendation/  collaborative filtering over the purchase history
-        domain/       rules, no framework or database
-        application/  use cases
-        infra/        routes, controllers, repositories, adapters (pg, bcrypt, Resend)
-        index.js      wires the module
+      catalog/          products
+      cart/             in-memory cart
+      ordering/         checkout and orders
+      identity/         sign up, login, JWT, permission middleware
+      recommendation/   collaborative filtering over the purchase history
     shared/         database pool, AppError, error handler, validation, permission names
     app.js          composition root: builds the modules and mounts the routes
     server.js
     *.test.js       HTTP tests in src/, unit tests next to the code they cover
 frontend/
   src/
-    app/            routes, pages and components
+    app/            routes, pages and components (store, product, cart, login, sign up, about)
     context/        cart and auth state
-    lib/            api base url
+    lib/            api base url and the parsing of saved comments (with its test)
 ```
+
+Inside each backend module: `domain/` holds the rules (no framework or database), `application/`
+the use cases, `infra/` the routes, controllers, repositories and adapters (pg, bcrypt, Resend),
+and `index.js` wires the module.
 
 ## Database
 
@@ -280,6 +309,9 @@ from another host will not render until that host is added there.
 cd backend
 npm test                # run everything
 npm run test:coverage   # same, with the coverage table
+
+cd ../frontend
+npm test                # the frontend unit test
 ```
 
 They need the database up (`docker compose up -d`, wait for `healthy`) and `backend/.env` with
@@ -294,7 +326,9 @@ They need the database up (`docker compose up -d`, wait for `healthy`) and `back
 - Source coverage is 100% of lines, branches and functions. `src/server.js` is the one file not
   measured, since no test imports it. Node 20 has no option to leave test files out of its own
   report, so the "all files" row it prints also counts them.
-- There are no frontend tests.
+- The frontend has one small unit test, for the parsing of the comments saved in the browser (it
+  guards a bug where an empty `localStorage` rendered two blank comments). The screens are checked
+  by hand, there are no UI tests.
 
 `src/checkout.test.js` (the first test written) inserts a row in `sales` on every run and is not
 cleaned up. With `RESEND_API_KEY` set it also sends a real email to the address it uses.
@@ -306,6 +340,18 @@ Checkout sends a confirmation email through Resend. Resend only sends from a ver
 (`onboarding@resend.dev`), which only delivers to the email of the Resend account owner. To email
 any customer, verify a domain of yours in Resend and set `EMAIL_FROM`. Whatever happens, the
 purchase is recorded and the API response reports whether the email went out.
+
+## Limitations
+
+- The cart endpoints share one cart in the backend's memory (at most 50 products). The site does
+  not use them: it keeps your cart in the browser (`localStorage`).
+- The login token is kept in `localStorage`, which a script injected into the page could read. An
+  `httpOnly` cookie would be safer.
+- The comments on the About page are a mock and only live in the visitor's browser.
+- Confirmation emails only reach the Resend account owner until a domain is verified.
+- Guest checkout stores the email that was typed, so use a throwaway one on the demo.
+- Recommendations are rebuilt on every request, which is fine for a small store.
+- On free tiers the API may sleep and the database may pause when idle.
 
 ## License
 
