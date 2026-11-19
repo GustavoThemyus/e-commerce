@@ -19,14 +19,14 @@ export default function CommentForm({ onAddComment }) {
         value={author}
         onChange={(e) => setAuthor(e.target.value)}
         placeholder="Your name"
-        className="w-full border p-3 rounded-md text-sm sm:text-base"
+        className="w-full border border-neutral-300 p-3 rounded-lg text-sm sm:text-base"
         required
       />
       <textarea
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="Your comment"
-        className="w-full border p-3 rounded-md text-sm sm:text-base"
+        className="w-full border border-neutral-300 p-3 rounded-lg text-sm sm:text-base"
         required
       />
       <button className="w-full sm:w-auto px-4 py-2 border border-zinc-950 text-zinc-950 hover:bg-zinc-950 hover:text-white active:brightness-110 rounded-md transition-all cursor-pointer">

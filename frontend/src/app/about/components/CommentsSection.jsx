@@ -59,7 +59,10 @@ export default function CommentsSection() {
 
       <ul className="space-y-4">
         {comments.map((comment) => (
-          <li key={comment.id} className="border p-4 rounded-md">
+          <li
+            key={comment.id}
+            className="border border-neutral-200 p-4 rounded-xl"
+          >
             <p className="font-medium">{comment.author}</p>
             <p className="text-neutral-600 text-sm sm:text-base">
               {comment.text}

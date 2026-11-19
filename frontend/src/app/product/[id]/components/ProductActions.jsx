@@ -1,6 +1,7 @@
 "use client";
 import { CartContext } from "@/context/CartContext";
 import { useContext, useState } from "react";
+import Link from "next/link";
 import { Plus, Minus, CircleCheck } from "lucide-react";
 
 export default function ProductActions({ product }) {
@@ -17,7 +18,7 @@ export default function ProductActions({ product }) {
   }
 
   return (
-    <div className="border border-neutral-300 rounded-lg p-4 sm:p-6 w-full max-w-md mx-auto space-y-4">
+    <div className="border border-neutral-200 rounded-xl p-4 sm:p-6 w-full max-w-md mx-auto space-y-4">
       <div className="gap-1">
         <h1 className="text-2xl">${totalPrice.toFixed(2)}</h1>
         <p>
@@ -76,9 +77,9 @@ export default function ProductActions({ product }) {
         </button>
       </div>
 
-      <a href="/" className="block text-center hover:underline w-fit mx-auto">
+      <Link href="/" className="block text-center hover:underline w-fit mx-auto">
         Continue shopping
-      </a>
+      </Link>
     </div>
   );
 }

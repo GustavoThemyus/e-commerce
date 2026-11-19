@@ -46,19 +46,21 @@ export default async function Home() {
 
         {/* Se houver erro, mostra mensagem */}
         {error ? (
-          <div className="text-center text-white mt-20">
-            <div className="bg-red-900/20 border border-red-500 rounded-lg p-8 max-w-md mx-auto">
-              <h2 className="text-2xl font-bold mb-4">
-                Ops! Something goes wrong
+          <div className="text-center mt-20">
+            <div className="bg-red-50 border border-red-200 rounded-xl p-8 max-w-md mx-auto">
+              <h2 className="text-2xl font-bold mb-4 text-red-800">
+                Oops! Something went wrong
               </h2>
-              <p className="mb-4">Couldn't load products..</p>
-              <p className="text-sm text-gray-400 mb-6">Erro: {error}</p>
+              <p className="mb-4 text-neutral-800">
+                We couldn't load the products. Please try again in a moment.
+              </p>
+              <p className="text-sm text-neutral-500">Error: {error}</p>
             </div>
           </div>
         ) : products.length === 0 ? (
           // Se não tiver produtos mas também não tiver erro
-          <div className="text-center text-white mt-20">
-            <p className="text-xl">No products found.</p>
+          <div className="text-center mt-20">
+            <p className="text-xl text-neutral-700">No products found.</p>
           </div>
         ) : (
           // Se tudo deu certo, mostra os produtos

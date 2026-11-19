@@ -20,7 +20,7 @@ export default function ProductInfo({
         <p>({rating.count} reviews)</p>
       </div>
 
-      <div className="border-t pt-5 space-y-3">
+      <div className="border-t border-neutral-200 pt-5 space-y-3">
         <p className="text-3xl">${price.toFixed(2)}</p>
         <p className="text-lg">{description}</p>
         <p className="text-sm text-neutral-600">
@@ -29,7 +29,7 @@ export default function ProductInfo({
         </p>
       </div>
 
-      <div className="grid grid-cols-2 border-t pt-5">
+      <div className="grid grid-cols-2 border-t border-neutral-200 pt-5">
         <div className="space-y-1 font-semibold">
           <p>Category:</p>
           <p>Brand:</p>

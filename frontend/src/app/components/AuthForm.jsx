@@ -33,7 +33,7 @@ export default function AuthForm({ mode }) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="border border-neutral-400 w-full sm:max-w-md rounded-lg p-4 sm:p-6 mx-auto mt-10 flex flex-col gap-4"
+      className="border border-neutral-200 w-full sm:max-w-md rounded-xl p-4 sm:p-6 mx-auto mt-10 flex flex-col gap-4"
     >
       <h1 className="text-black font-semibold text-2xl">
         {isLogin ? "Log in" : "Create account"}

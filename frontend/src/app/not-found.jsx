@@ -19,12 +19,12 @@ export default function NotFound() {
         <p className="text-neutral-950 mb-6">
           This page that the user tried to access doesn't exist
         </p>
-        <a
+        <Link
           href="/"
           className="rounded-3xl mt-4 font-bold text-white bg-orange-600 hover:brightness-95 py-3 px-4"
         >
           ← Back to Store
-        </a>
+        </Link>
       </div>
     </main>
   );
