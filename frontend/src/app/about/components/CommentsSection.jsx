@@ -1,6 +1,7 @@
 "use client";
 import CommentForm from "./CommentForm";
 import { useEffect, useState } from "react";
+import { parseStoredComments } from "@/lib/comments.mjs";
 
 // mock — depois trocar por DB
 const MOCK_COMMENTS = [
@@ -16,16 +17,25 @@ const MOCK_COMMENTS = [
   },
 ];
 
+// localStorage pode estar bloqueado (navegação privada, política do navegador): nesse caso o
+// comentário só vive na memória, e a página continua funcionando
+function readLocalComments() {
+  try {
+    return parseStoredComments(localStorage.getItem("comments"));
+  } catch {
+    return [];
+  }
+}
+
 export default function CommentsSection() {
   const [comments, setComments] = useState(MOCK_COMMENTS);
 
   useEffect(() => {
-    const localComments = JSON.parse(localStorage.getItem("comments")) || "[]";
-    setComments([...MOCK_COMMENTS, ...localComments]);
+    setComments([...MOCK_COMMENTS, ...readLocalComments()]);
   }, []);
 
   function handleNewComment(comment) {
-    const updateLocal = JSON.parse(localStorage.getItem("comments") || "[]");
+    const updateLocal = readLocalComments();
 
     const newComment = {
       ...comment,
@@ -34,7 +44,11 @@ export default function CommentsSection() {
 
     const newLocalComments = [...updateLocal, newComment];
 
-    localStorage.setItem("comments", JSON.stringify(newLocalComments));
+    try {
+      localStorage.setItem("comments", JSON.stringify(newLocalComments));
+    } catch {
+      // sem armazenamento: o comentário aparece nesta visita e não é guardado
+    }
 
     setComments([...MOCK_COMMENTS, ...newLocalComments]);
   }
