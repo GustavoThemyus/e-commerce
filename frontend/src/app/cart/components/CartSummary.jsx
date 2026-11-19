@@ -103,7 +103,7 @@ export function CartSummary({ products, onPurchased }) {
   }
 
   return (
-    <div className="border border-neutral-400 w-full sm:max-w-md rounded-lg p-4 sm:p-6 mx-auto lg:sticky lg:top-8">
+    <div className="border border-neutral-200 w-full sm:max-w-md rounded-xl p-4 sm:p-6 mx-auto lg:sticky lg:top-8">
       <h2 className="text-black font-semibold text-2xl mb-6">Order Resume:</h2>
 
       <div className="space-y-3 mb-6 flex flex-col">
@@ -119,7 +119,7 @@ export function CartSummary({ products, onPurchased }) {
         </div>
 
         {/* Total */}
-        <div className="border-t border-black pt-3 mt-3">
+        <div className="border-t border-neutral-200 pt-3 mt-3">
           <div className="flex justify-between text-black text-xl">
             <span>Total:</span>
             <span className="text-orange-400">${total.toFixed(2)}</span>
