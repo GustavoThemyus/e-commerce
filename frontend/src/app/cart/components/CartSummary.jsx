@@ -1,7 +1,7 @@
 // Total, botão finalizar, botão continuar
 import { useContext, useState } from "react";
 import Link from "next/link";
-import { CircleX } from "lucide-react";
+import { CircleX, Info } from "lucide-react";
 import { API_URL } from "@/lib/api";
 import { AuthContext } from "@/context/AuthContext";
 
@@ -154,6 +154,15 @@ export function CartSummary({ products, onPurchased }) {
         />
       </div>
       )}
+
+      {/* Aviso de demonstração: vale para convidado e para logado */}
+      <p className="flex items-start gap-2 mt-4 text-xs text-neutral-500">
+        <Info className="w-4 h-4 shrink-0" aria-hidden="true" />
+        <span>
+          Demo store: no real payment is charged. Confirmation emails are only
+          delivered to the project owner.
+        </span>
+      </p>
 
       {/* Botões */}
       <div>
