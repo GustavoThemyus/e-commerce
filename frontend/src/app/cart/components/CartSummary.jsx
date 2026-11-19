@@ -1,18 +1,16 @@
 // Total, botão finalizar, botão continuar
 import { useContext, useState } from "react";
 import Link from "next/link";
-import { CheckCircle, Ban, CircleX } from "lucide-react";
+import { CircleX } from "lucide-react";
 import { API_URL } from "@/lib/api";
 import { AuthContext } from "@/context/AuthContext";
 
-export function CartSummary({ products }) {
+export function CartSummary({ products, onPurchased }) {
   const { user, token, logout } = useContext(AuthContext);
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
-  const [showSuccess, setShowSuccess] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
 
   // Calcula o preço total
   const total = products.reduce((soma, produto) => {
@@ -32,7 +30,6 @@ export function CartSummary({ products }) {
   async function handleCheckout() {
     setEmailError("");
     setErrorMessage("");
-    setShowSuccess(false);
 
     // Logado: o backend usa o e-mail da conta
     if (!user && !email) {
@@ -84,23 +81,24 @@ export function CartSummary({ products }) {
       }
 
       const data = await response.json();
-      if (data.emailSent) {
-        setSuccessMessage("Purchase successfull!");
-      } else {
-        setSuccessMessage(
-          "Purchase completed, but email could not be sent (testing mode).",
-        );
-      }
 
-      // Sucesso
-      setShowSuccess(true);
-      setTimeout(() => setShowSuccess(false), 5000);
+      // Sucesso: quem decide o que fazer com o carrinho é a página
+      onPurchased(
+        data.emailSent
+          ? "Purchase successful! A confirmation email is on its way."
+          : "Purchase completed, but the confirmation email could not be sent (testing mode).",
+      );
     } catch (error) {
       console.error("Error at finalization:", error);
-      setErrorMessage("Error finalizing purchase.");
+      // Mensagens do servidor (limite de compras, produto inválido...) servem ao usuário;
+      // falha de rede não, então troca por um texto claro
+      setErrorMessage(
+        error.message === "Failed to fetch"
+          ? "Could not reach the server. Please try again."
+          : error.message || "Error finalizing purchase.",
+      );
     } finally {
       setIsProcessing(false);
-      setEmail("");
     }
   }
 
@@ -178,16 +176,15 @@ export function CartSummary({ products }) {
           Continue shopping
         </Link>
 
-        <div
-          className={`flex items-center justify-center gap-2 text-sm transition-all duration-500 transform ${
-            showSuccess
-              ? "opacity-100 translate-y-0 h-auto mt-6"
-              : "opacity-0 -translate-y-2 h-0 overflow-hidden"
-          }`}
-        >
-          <CheckCircle className="w-4 h-4 text-emerald-600" />
-          <span className="text-emerald-600">{successMessage}</span>
-        </div>
+        {errorMessage && (
+          <p
+            role="alert"
+            className="flex items-center justify-center gap-2 text-sm text-red-600 mt-6"
+          >
+            <CircleX className="w-4 h-4" />
+            {errorMessage}
+          </p>
+        )}
       </div>
     </div>
   );

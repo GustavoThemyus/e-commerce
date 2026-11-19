@@ -19,9 +19,12 @@ const json = (body, status = 200) =>
   });
 
 let originalKey;
+let originalFrom;
 
 beforeEach(() => {
   originalKey = process.env.RESEND_API_KEY;
+  originalFrom = process.env.EMAIL_FROM;
+  delete process.env.EMAIL_FROM;
   mock.method(console, "log", () => {}); // o gateway imprime a resposta do Resend
 });
 
@@ -29,6 +32,8 @@ afterEach(() => {
   mock.restoreAll();
   if (originalKey === undefined) delete process.env.RESEND_API_KEY;
   else process.env.RESEND_API_KEY = originalKey;
+  if (originalFrom === undefined) delete process.env.EMAIL_FROM;
+  else process.env.EMAIL_FROM = originalFrom;
 });
 
 test("sem RESEND_API_KEY recusa sem chamar a rede", async () => {
@@ -56,6 +61,7 @@ test("envia o e-mail de confirmação com destinatário, total e itens", async (
   const sent = JSON.parse(options.body);
   assert.strictEqual(sent.to, "cliente@example.test");
   assert.strictEqual(sent.subject, "Purchase confirmation");
+  assert.strictEqual(sent.from, "E-Commerce <onboarding@resend.dev>", "remetente de teste do Resend por padrão");
   assert.match(sent.html, /\$242\.20/); // total 219.90 + 22.30
   assert.match(sent.html, /Mochila — 2 x \$109\.95/);
   assert.match(sent.html, /Camiseta — 1 x \$22\.30/);
@@ -81,4 +87,26 @@ test("erro do Resend sem mensagem usa o texto padrão", async () => {
     createResendEmailGateway().sendPurchaseConfirmation(order),
     /Resend send failed/,
   );
+});
+
+test("EMAIL_FROM define o remetente (domínio próprio verificado no Resend)", async () => {
+  process.env.RESEND_API_KEY = "re_chave_de_teste";
+  process.env.EMAIL_FROM = "Minha Loja <compras@minhaloja.example>";
+  const fetchMock = mock.method(globalThis, "fetch", async () => json({ id: "email-2" }));
+
+  await createResendEmailGateway().sendPurchaseConfirmation(order);
+
+  const sent = JSON.parse(fetchMock.mock.calls[0].arguments[1].body);
+  assert.strictEqual(sent.from, "Minha Loja <compras@minhaloja.example>");
+});
+
+test("EMAIL_FROM vazio (como no .env.example copiado) usa o remetente padrão", async () => {
+  process.env.RESEND_API_KEY = "re_chave_de_teste";
+  process.env.EMAIL_FROM = "";
+  const fetchMock = mock.method(globalThis, "fetch", async () => json({ id: "email-3" }));
+
+  await createResendEmailGateway().sendPurchaseConfirmation(order);
+
+  const sent = JSON.parse(fetchMock.mock.calls[0].arguments[1].body);
+  assert.strictEqual(sent.from, "E-Commerce <onboarding@resend.dev>");
 });

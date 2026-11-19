@@ -251,6 +251,7 @@ Environment variables:
 | Backend | `CORS_ORIGIN` | The frontend URL, no trailing slash (comma separated for several) |
 | Backend | `TRUST_PROXY` | `1` behind Render, so each visitor gets their own rate limit |
 | Backend | `RESEND_API_KEY` | Optional. Without it checkout works and only skips the email |
+| Backend | `EMAIL_FROM` | Optional sender. Empty uses Resend's test sender, which only delivers to the Resend account owner |
 | Backend | `PORT` | Set by Render, nothing to do |
 | Frontend | `NEXT_PUBLIC_API_URL` | The backend URL. It is baked in at **build time**, set it before the first deploy |
 
@@ -300,9 +301,11 @@ cleaned up. With `RESEND_API_KEY` set it also sends a real email to the address 
 
 ## Email confirmation
 
-Checkout sends a confirmation email through Resend. On a Resend free account, emails only reach
-the account owner's verified address. Sending to any other address fails, but the purchase is
-still recorded and the API response reports whether the email went out.
+Checkout sends a confirmation email through Resend. Resend only sends from a verified domain, so a
+`@gmail.com` sender does not work. By default the app uses Resend's test sender
+(`onboarding@resend.dev`), which only delivers to the email of the Resend account owner. To email
+any customer, verify a domain of yours in Resend and set `EMAIL_FROM`. Whatever happens, the
+purchase is recorded and the API response reports whether the email went out.
 
 ## License
 

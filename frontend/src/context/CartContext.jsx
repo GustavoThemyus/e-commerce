@@ -60,6 +60,11 @@ export function CartProvider({ children }) {
     });
   }
 
+  // Esvazia o carrinho (depois de uma compra concluída)
+  function clearCart() {
+    setCart([]);
+  }
+
   // Função pra aumentar a quantidade de um item no carrinho
   function increaseQuantity(productId) {
     setCart((prev) => {
@@ -95,6 +100,7 @@ export function CartProvider({ children }) {
         removeFromCart,
         increaseQuantity,
         decreaseQuantity,
+        clearCart,
         isHydrated, // Exporta isHydrated pros componentes usarem
       }}
     >

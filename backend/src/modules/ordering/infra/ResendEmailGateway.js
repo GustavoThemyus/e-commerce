@@ -7,8 +7,12 @@ async function sendPurchaseEmail(client, items, total) {
   }
   const resend = new Resend(process.env.RESEND_API_KEY);
 
+  // O Resend só envia de domínio verificado. Gmail e afins não dá para verificar; o remetente de
+  // teste onboarding@resend.dev só entrega para o e-mail dono da conta Resend.
+  const from = process.env.EMAIL_FROM || "E-Commerce <onboarding@resend.dev>";
+
   const { data, error } = await resend.emails.send({
-    from: "E-Commerce <gustavothemyus@gmail.com>",
+    from,
     to: client,
     subject: "Purchase confirmation",
     html: `

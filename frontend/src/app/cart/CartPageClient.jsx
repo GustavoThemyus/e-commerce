@@ -7,8 +7,9 @@ import { CartSummary } from "./components/CartSummary";
 import BackButton from "../components/BackButton";
 
 export default function Cart() {
-  const { cart } = useContext(CartContext);
+  const { cart, clearCart } = useContext(CartContext);
   const [isClient, setIsClient] = useState(false);
+  const [purchaseNotice, setPurchaseNotice] = useState("");
 
   // Só renderiza depois que está no cliente
   useEffect(() => {
@@ -19,8 +20,15 @@ export default function Cart() {
     return <main className="text-black text-center mt-20">Loading...</main>;
   }
 
+  // Compra concluída: esvazia o carrinho e guarda o aviso aqui, porque o resumo (que mostraria a
+  // mensagem) sai da tela junto com os itens
+  function handlePurchased(message) {
+    setPurchaseNotice(message);
+    clearCart();
+  }
+
   if (!cart || cart.length === 0) {
-    return <EmptyCart />;
+    return <EmptyCart notice={purchaseNotice} />;
   }
 
   return (
@@ -33,7 +41,7 @@ export default function Cart() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12 items-start">
           <CartList products={cart} />
-          <CartSummary products={cart} />
+          <CartSummary products={cart} onPurchased={handlePurchased} />
         </div>
       </div>
     </main>
