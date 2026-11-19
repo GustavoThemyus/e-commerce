@@ -37,13 +37,17 @@ checkout flow, with a Next.js frontend talking to a Node.js + PostgreSQL API.
 | GET | `/api/recommendations` | Recommendations for the logged in user (default 8) |
 | POST | `/api/product` | Create a product (`product:write`) |
 | PUT | `/api/product/:id` | Edit a product (`product:write`) |
+| GET | `/health` | Health check: `200` if the database answers, `503` otherwise |
 
 The cart is kept in memory in the backend, as allowed by the challenge. It has no table of its
-own and resets when the server restarts.
+own, resets when the server restarts, and holds at most 50 distinct products.
 
 Errors are JSON, `{ "error": "message" }`: `400` invalid input (including cart payloads), `401`
 missing or invalid token, `403` missing permission, `404` unknown product or an id that is not a
-positive integer, `409` email already registered, `429` too many login attempts.
+positive integer, `409` email already registered, `429` too many requests.
+
+Rate limits per client IP: login 10 per 15 minutes, sign up 20 per hour, checkout 30 per 15
+minutes.
 
 ## Access control
 
@@ -231,6 +235,43 @@ npm run dev
 
 Available at `http://localhost:3000`. It calls the backend at `http://localhost:3333` by
 default; set `NEXT_PUBLIC_API_URL` only if the backend runs somewhere else.
+
+## Deploy
+
+Suggested setup: **Vercel** (frontend), **Render** (backend) and **Supabase** (database). Free
+tiers change, check the current limits. The backend may sleep when idle, so the first visit after
+a pause can take about a minute.
+
+Environment variables:
+
+| Service | Variable | Value |
+| ------- | -------- | ----- |
+| Backend | `DATABASE_URL` | Supabase **Session pooler** URI (port 5432) |
+| Backend | `JWT_SECRET` | A new random value for production, never the local one |
+| Backend | `CORS_ORIGIN` | The frontend URL, no trailing slash (comma separated for several) |
+| Backend | `TRUST_PROXY` | `1` behind Render, so each visitor gets their own rate limit |
+| Backend | `RESEND_API_KEY` | Optional. Without it checkout works and only skips the email |
+| Backend | `PORT` | Set by Render, nothing to do |
+| Frontend | `NEXT_PUBLIC_API_URL` | The backend URL. It is baked in at **build time**, set it before the first deploy |
+
+Order matters, because the backend needs the frontend URL and the frontend needs the backend URL:
+
+1. **Supabase:** in the SQL Editor run `backend/schema.sql`, then each file in
+   `backend/migrations/` in order. Copy the Session pooler URI.
+2. **Render:** new Web Service from this repository, Root Directory `backend`, build command
+   `npm ci`, start command `npm start`, Health Check Path `/health`. Add the variables above
+   (put any placeholder in `CORS_ORIGIN` for now).
+3. **Vercel:** import the repository, Root Directory `frontend`, set `NEXT_PUBLIC_API_URL` to the
+   Render URL, then deploy.
+4. Back on Render, set `CORS_ORIGIN` to the Vercel URL and redeploy.
+5. Optional, so the recommendations have something to show: from your machine run
+   `DATABASE_URL='<production uri>' npm run seed:demo` inside `backend/`. To make yourself an admin,
+   sign up on the site and run `DATABASE_URL='<production uri>' npm run grant-role -- you@email.com admin`.
+6. Optional: point a free uptime monitor at `/health` to reduce the cold starts.
+
+Product images go through `next/image`, which only accepts `fakestoreapi.com` today
+([`next.config.mjs`](frontend/next.config.mjs)). A product created through the API with an image
+from another host will not render until that host is added there.
 
 ## Tests
 

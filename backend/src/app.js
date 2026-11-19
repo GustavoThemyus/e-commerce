@@ -6,6 +6,8 @@ import cors from "cors";
 import helmet from "helmet";
 import pool from "./shared/config/database.js";
 import { errorHandler } from "./shared/middlewares/errorHandler.js";
+import { createHealthRouter } from "./shared/health.js";
+import { parseOrigins, parseTrustProxy } from "./shared/config/env.js";
 import { createIdentityModule } from "./modules/identity/index.js";
 import { createCatalogModule } from "./modules/catalog/index.js";
 import { createCartModule } from "./modules/cart/index.js";
@@ -31,10 +33,19 @@ const recommendation = createRecommendationModule({
 
 const app = express();
 
+// Atrás de proxy (Render, Vercel) o IP real do visitante vem em X-Forwarded-For
+const trustProxy = parseTrustProxy(process.env.TRUST_PROXY);
+if (trustProxy !== undefined) {
+  app.set("trust proxy", trustProxy);
+}
+
 app.use(helmet());
-app.use(cors());
+// Só as origens do frontend: o token vai no cabeçalho Authorization, então nenhuma outra
+// página deve conseguir chamar a API a partir do navegador de um usuário logado
+app.use(cors({ origin: parseOrigins(process.env.CORS_ORIGIN) }));
 app.use(express.json());
 
+app.use(createHealthRouter({ pool }));
 app.use("/api", identity.router);
 app.use("/api", catalog.router);
 app.use("/api", cart.router);

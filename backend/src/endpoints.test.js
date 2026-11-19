@@ -3,6 +3,7 @@ import test, { after } from "node:test";
 import assert from "node:assert";
 import request from "supertest";
 import { app, pool, uniqueEmail, cleanup } from "./testHelpers.js";
+import { parseOrigins } from "./shared/config/env.js";
 
 const guestEmail = uniqueEmail("endpoints");
 const item = (id, quantity) => ({ product: { id, title: `P${id}`, price: 10 }, quantity });
@@ -156,4 +157,37 @@ test("POST /checkout grava a compra, devolve o total e esvazia o carrinho", asyn
   assert.strictEqual(Number(rows[0].total), 219.9);
 
   assert.deepStrictEqual((await request(app).get("/api/cart")).body, []);
+});
+
+// ---------- GET /health ----------
+test("GET /health responde 200 com o banco no ar", async () => {
+  const res = await request(app).get("/health");
+  assert.strictEqual(res.status, 200);
+  assert.deepStrictEqual(res.body, { status: "ok" });
+});
+
+// ---------- CORS ----------
+test("CORS libera a origem do frontend e só ela", async () => {
+  const [allowed] = parseOrigins(process.env.CORS_ORIGIN);
+
+  const ok = await request(app).get("/api/product/1").set("Origin", allowed);
+  assert.strictEqual(ok.headers["access-control-allow-origin"], allowed);
+  assert.match(ok.headers.vary, /Origin/);
+
+  const other = await request(app).get("/api/product/1").set("Origin", "https://evil.example");
+  assert.strictEqual(other.headers["access-control-allow-origin"], undefined);
+});
+
+test("preflight do navegador (checkout com Authorization) é aceito para a origem do frontend", async () => {
+  const [allowed] = parseOrigins(process.env.CORS_ORIGIN);
+
+  const res = await request(app)
+    .options("/api/checkout")
+    .set("Origin", allowed)
+    .set("Access-Control-Request-Method", "POST")
+    .set("Access-Control-Request-Headers", "authorization,content-type");
+
+  assert.strictEqual(res.status, 204);
+  assert.strictEqual(res.headers["access-control-allow-origin"], allowed);
+  assert.match(res.headers["access-control-allow-headers"], /authorization/i);
 });

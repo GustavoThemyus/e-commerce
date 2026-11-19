@@ -1,3 +1,9 @@
+import { AppError } from "../../../shared/errors/AppError.js";
+
+// O carrinho é um estado global em memória exposto pela API: sem teto, qualquer um o faria
+// crescer até esgotar a memória do servidor
+export const MAX_DISTINCT_ITEMS = 50;
+
 export class Cart {
   #items = [];
 
@@ -11,6 +17,9 @@ export class Cart {
     if (existing) {
       existing.quantity += quantity;
     } else {
+      if (this.#items.length >= MAX_DISTINCT_ITEMS) {
+        throw new AppError(400, "Cart is full");
+      }
       this.#items.push({ ...product, quantity });
     }
   }

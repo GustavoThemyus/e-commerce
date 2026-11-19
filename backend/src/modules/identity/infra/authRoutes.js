@@ -30,10 +30,19 @@ const loginLimiter = rateLimit({
   message: { error: "Too many attempts, try again later" },
 });
 
+// Cadastro é público: sem limite, dá para encher o banco de contas e gastar CPU com bcrypt
+const registerLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  limit: 20,
+  standardHeaders: "draft-7",
+  legacyHeaders: false,
+  message: { error: "Too many sign ups, try again later" },
+});
+
 export function createAuthRoutes({ controller, authenticate }) {
   const router = Router();
 
-  router.post("/auth/register", validate(credentials), controller.register);
+  router.post("/auth/register", registerLimiter, validate(credentials), controller.register);
   router.post("/auth/login", loginLimiter, validate(credentials), controller.login);
   router.get("/auth/me", authenticate, controller.me);
 
